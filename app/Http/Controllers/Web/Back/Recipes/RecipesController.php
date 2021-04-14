@@ -7,30 +7,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use App\Http\Requests\Resep\StoreKategoriRequest;
-use App\Http\Requests\Resep\UpdateKategoriRequest;
+use App\Http\Requests\Resep\StoreRecipesRequest;
+use App\Http\Requests\Resep\UpdateRecipesRequest;
 
-use App\Models\Kategori;
+use App\Models\Category;
+use App\Models\Recipes;
 
 use Symfony\Component\HttpFoundation\Response;
-
-class KategoriController extends Controller
+class RecipesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $kategoris = Kategori::orderBy('created_at','desc')->get();
-        return view('kategoris.index', compact('kategoris'));
+        $recipes = Recipes::orderBy('created_at' , 'Desc')->get();
+        //dd($recipes);
+        return view('recipes.index', compact('recipes'));
     }
 
     /**
@@ -40,7 +35,7 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        return view('kategoris/create');
+        return view('recipes/create');
     }
 
     /**
@@ -49,12 +44,9 @@ class KategoriController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreKategoriRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->all();
-
-        $kategori = Kategori::create($data);
-        return redirect()->route('kategori.index');
+        //
     }
 
     /**
@@ -76,8 +68,7 @@ class KategoriController extends Controller
      */
     public function edit($id)
     {
-        $kategori = Kategori::find($id);
-        return view('kategoris.edit', compact('kategori'));
+        //
     }
 
     /**
@@ -87,13 +78,9 @@ class KategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateKategoriRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $kategori = Kategori::find($id);
-        $kategori->update($data);
-
-        return redirect()->route('kategori.index');
+        //
     }
 
     /**
@@ -104,9 +91,6 @@ class KategoriController extends Controller
      */
     public function destroy($id)
     {
-        $kategori = Kategori::find($id);
-        $kategori->forceDelete();
-        return back();
-
+        //
     }
 }

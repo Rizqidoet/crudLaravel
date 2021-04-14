@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\Back\Recipes\KategoriController;
+use App\Http\Controllers\Web\Back\Recipes\RecipesController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,7 +25,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
-    Route::resource('resep', KategoriController::class);
+    Route::resource('kategori', KategoriController::class);
+    Route::resource('recipes', RecipesController::class);
 });
 
 

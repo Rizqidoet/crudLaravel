@@ -17,8 +17,7 @@
                             </div>
 
                             <div class="m-7">
-                                <form action="{{ route('resep.update', [$kategori->id]) }}" method="POST" id="form" enctype="multipart/form-data">
-                                    @method('PUT')
+                                <form action="{{ route('kategori.store') }}" method="POST" id="form">
                                     @csrf
                                     
                                     <input type="hidden" name="apikey" value="YOUR_ACCESS_KEY_HERE">
@@ -28,7 +27,7 @@
 
                                     <div class="mb-6">
                                         <label for="name" class="block mb-2 text-sm text-gray-600 dark:text-gray-400">Nama Kategori</label>
-                                        <input value="{{ old('name', isset($kategori) ? $kategori->name : '') }}" type="text" name="name" id="name" placeholder="Kategori" required class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                                        <input type="text" name="name" id="name" placeholder="Kategori" required class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
                                             @if($errors->has('name'))
                                                 <p style="font-bold text-red-300">
                                                     {{ $errors->first('name') }}
@@ -37,7 +36,7 @@
                                     </div>
                                     
                                     <div class="mb-6">
-                                        <button type="submit" class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Update</button>
+                                        <button type="submit" class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Save</button>
                                     </div>
 
                                     <p class="text-base text-center text-gray-400" id="result">

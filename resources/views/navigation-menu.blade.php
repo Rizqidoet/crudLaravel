@@ -17,8 +17,13 @@
                     </x-jet-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('resep.index') }}" :="request()->routeIs('recipes/index')">
-                        {{ __('Resep') }}
+                    <x-jet-nav-link href="{{ route('kategori.index') }}" :="request()->routeIs('kategori/index')">
+                        {{ __('Kategori') }}
+                    </x-jet-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-jet-nav-link href="{{ route('recipes.index') }}" :="request()->routeIs('recipes/index')">
+                        {{ __('Recipes') }}
                     </x-jet-nav-link>
                 </div>
             </div>
