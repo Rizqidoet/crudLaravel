@@ -6,14 +6,23 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+//use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Validator;
 
 use App\Http\Requests\Resep\StoreRecipesRequest;
 use App\Http\Requests\Resep\UpdateRecipesRequest;
 
 use App\Models\Category;
+use App\Models\CookingStep;
+use App\Models\Ingredients;
 use App\Models\Recipes;
+use App\Models\RecipesImage;
+use App\Models\Taggable_Tag;
 
 use Symfony\Component\HttpFoundation\Response;
+
+use File;
 class RecipesController extends Controller
 {
     /**
@@ -33,9 +42,26 @@ class RecipesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('recipes/create');
+        $model = new Recipes;
+        $recipeCategories = Category::where([
+            ['status', '=', 1],
+        ])->get();
+        
+        return view('recipes.create')->with(
+            [
+                'recipeCategories' => $recipeCategories,
+                'budgetLists' => $this->budgetList($model),
+                'levelLists'=>$this->levelList($model),
+                'halalLists'=>$this->halalList($model),
+                'vegetarianLists'=>$this->vegetarianList($model)
+            ]
+        );
+
+        
+
+        //return view('recipes/create');
     }
 
     /**
@@ -46,8 +72,32 @@ class RecipesController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        //save recipe
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+        print_r($data);
+        $recipes = Recipes::create($data);
+
+        //save image
+        $validatedData = $request->validate([
+            'file.*' => 'image|max:1024',
+    
+        ]);
+        $name = $request->file('file')->getClientOriginalName();
+        $path = $request->file('file')->store('public/files');
+        $save = new RecipesImage;
+        $save->name = $name;
+        $save->path = $path;
+
+        $recipes->recipes_image()->create([
+            'name' => $name,
+            'path' => $path,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return redirect()->route('recipes.index');
+        
+        }
 
     /**
      * Display the specified resource.
@@ -92,5 +142,29 @@ class RecipesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function budgetList($model)
+    {
+        $data = $model->budgetLists();
+        return $data;
+    }
+
+    private function levelList($model)
+    {
+        $data = $model->levelLists();
+        return $data;
+    }
+
+    private function halalList($model)
+    {
+        $data = $model->halalLists();
+        return $data;
+    }
+
+    private function vegetarianList($model)
+    {
+        $data = $model->vegetarianLists();
+        return $data;
     }
 }

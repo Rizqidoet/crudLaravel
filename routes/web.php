@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\Back\Recipes\KategoriController;
 use App\Http\Controllers\Web\Back\Recipes\RecipesController;
+use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,7 +28,15 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::resource('kategori', KategoriController::class);
     Route::resource('recipes', RecipesController::class);
+  
+    //Route::get('add-remove-input-fields', 'RecipesController@index');
+    //Route::post('add-remove-input-fields', 'RecipesController@store');
+
+    Route::get('file-upload', [FileUploadController::class, 'index']);
+    Route::post('store', [FileUploadController::class, 'store']);
 });
+
+	
 
 
 

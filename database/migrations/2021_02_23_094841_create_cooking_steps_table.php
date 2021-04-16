@@ -17,7 +17,7 @@ class CreateCookingStepsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('recipes_id');
-            $table->longText('step');
+            $table->longText('cooking_step');
             $table->smallInteger('order');
             $table->foreign('recipes_id')->references('id')->on('recipes')->constrained()->onUpdate('cascade')->onDelete('cascade');
         });

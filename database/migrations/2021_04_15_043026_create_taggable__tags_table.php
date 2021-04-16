@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRecipesImageTable extends Migration
+class CreateTaggableTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateRecipesImageTable extends Migration
      */
     public function up()
     {
-        Schema::create('recipes_images', function (Blueprint $table) {
+        Schema::create('taggable__tags', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('photo');
             $table->unsignedBigInteger('recipes_id');
-            $table->unsignedBigInteger('user_id');
+            $table->string('tag_name');
+            $table->timestamps();
             $table->foreign('recipes_id')->references('id')->on('recipes')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            
         });
     }
 
@@ -31,6 +30,6 @@ class CreateRecipesImageTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('receipes_image');
+        Schema::dropIfExists('taggable__tags');
     }
 }

@@ -13,6 +13,26 @@ class Recipes extends Model
     use HasFactory;
     //use Taggable;
 
+    public $table = 'recipes';
+
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'title',
+        'stories',
+        'serving',
+        'preptime',
+        'cooktime',
+        'calories',
+        'level',
+        'budget',
+        'status',
+        'ishalal',
+        'isvegan',
+        'created_at',
+        'updated_at',
+    ];
+
     public function ingredients()
     {
         return $this->hasMany(Ingredients::class);
@@ -34,6 +54,11 @@ class Recipes extends Model
     public function recipes_image()
     {
         return $this->hasMany(RecipesImage::class);
+    }
+
+    public function taggable_tag()
+    {
+        return $this->hasMany(Taggable_Tag::class);
     }
 
     public function budgetLists()
