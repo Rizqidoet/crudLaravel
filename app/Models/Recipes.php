@@ -58,7 +58,7 @@ class Recipes extends Model
 
     public function taggable_tag()
     {
-        return $this->hasMany(Taggable_Tag::class);
+        return $this->hasMany(TagableTag::class);
     }
 
     public function budgetLists()

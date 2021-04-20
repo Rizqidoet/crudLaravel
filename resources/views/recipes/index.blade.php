@@ -23,7 +23,7 @@
                     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200 text-xs">
                                 <thead class="bg-blue-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -61,16 +61,58 @@
                                         {{ $recipe->title ?? '' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        {{ $recipe->category_id ?? '' }}
+                                        {{ $recipe->category->name ?? '' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        {{ $recipe->budget ?? '' }}
+                                               
+                                    @if( $recipe->budget == 1 ){
+                                            
+                                                5.000 - 10.000
+                                            
+                                        }@elseif($recipe->budget == 2){
+                                            
+                                                10.000 - 50.000
+                                            
+                                        } @elseif($recipe->budget == 3){
+                                            
+                                                50.000 - 100.000
+                                            
+                                        } @elseif($recipe->budget == 4){
+                                            
+                                                100.000 - 500.000
+                                            
+                                        } @elseif($recipe->budget == 5){
+                                            
+                                                500.000 - 1.000.000
+                                            
+                                        } @else{
+                                            Data Tidak Sesuai
+                                        }
+                                        @endif
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap text-left">
+                                        @if($recipe->level == 1){
+                                            Belum Pernah Memasak
+                                        }@elseif($recipe->level == 2){
+                                            Pemula
+                                        }@elseif($recipe->level == 3){
+                                            Mahir Memasak
+                                        }@else{
+                                            Data Tidak Sesuai
+                                        }@endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        {{ $recipe->level ?? '' }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        {{ $recipe->status ?? '' }}
+                                        @if($recipe->status == 1){
+                                            Draft
+                                        }@elseif($recipe->status == 2){
+                                            Publish
+                                        }@elseif($recipe->status == 3){
+                                            Live
+                                        }@else{
+                                            Data Tidak Sesuai
+                                        }
+                                        @endif
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                         <div class="flex item-center justify-center">

@@ -4,14 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Conner\Tagging\Taggable;
 
-class Taggable_Tag extends Model
+class TagableTag extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    use \Conner\Tagging\Taggable;
 
-    public function recipes()
-    {
+    protected $fillable = [
+        'tag_name',
+        'recipes_id'
+    ];
+
+    public function recipes(){
+
         return $this->belongsTo(Recipes::class);
     }
+
 }

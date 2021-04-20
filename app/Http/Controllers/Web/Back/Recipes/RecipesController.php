@@ -18,6 +18,8 @@ use App\Models\CookingStep;
 use App\Models\Ingredients;
 use App\Models\Recipes;
 use App\Models\RecipesImage;
+use App\Models\tagable_tag;
+use App\Models\TagableTag;
 use App\Models\Taggable_Tag;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +35,7 @@ class RecipesController extends Controller
     public function index()
     {
         $recipes = Recipes::orderBy('created_at' , 'Desc')->get();
+        
         //dd($recipes);
         return view('recipes.index', compact('recipes'));
     }
@@ -48,6 +51,8 @@ class RecipesController extends Controller
         $recipeCategories = Category::where([
             ['status', '=', 1],
         ])->get();
+
+        $post_tags = TagableTag::all();
         
         return view('recipes.create')->with(
             [
@@ -55,7 +60,8 @@ class RecipesController extends Controller
                 'budgetLists' => $this->budgetList($model),
                 'levelLists'=>$this->levelList($model),
                 'halalLists'=>$this->halalList($model),
-                'vegetarianLists'=>$this->vegetarianList($model)
+                'vegetarianLists'=>$this->vegetarianList($model),
+                'post_tags' => $post_tags,
             ]
         );
 
@@ -75,6 +81,7 @@ class RecipesController extends Controller
         //save recipe
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
+        $data['status'] = 1;
         print_r($data);
         $recipes = Recipes::create($data);
 
@@ -94,6 +101,35 @@ class RecipesController extends Controller
             'path' => $path,
             'user_id' => auth()->user()->id,
         ]);
+
+        //save ingredient & stepcooking
+        $request->validate([
+            'moreFieldsIngredient.*.ingredient_name' => 'required',
+            'moreFieldsStepCooking.*.stepcooking_name' => 'required'
+        ]);
+
+        foreach($request->moreFieldsIngredient as $keyIngredient => $valueIngredient){
+            $valueIngredient['recipes_id'] = $recipes->id;
+            Ingredients::create($valueIngredient);
+
+        }
+        foreach($request->moreFieldsStepCooking as $keyStepCooking => $valueStepCooking){
+            $valueStepCooking['recipes_id'] = $recipes->id;
+            $valueStepCooking['order'] = 0;
+            CookingStep::create($valueStepCooking);
+
+        }
+
+        //save tags
+        $this->validate($request, [
+            'tag_name' => 'required',
+        ]);
+
+        $input_tag = $request->all();
+        $tags = explode(",", $input_tag['tag_name']);
+        $input_tag['recipes_id'] = $recipes->id;
+        $post_tag = TagableTag::create($input_tag);
+        $post_tag->tag($tags);
 
         return redirect()->route('recipes.index');
         
