@@ -80,6 +80,7 @@ class RecipesController extends Controller
     {
         //save recipe
         $data = $request->all();
+        dd($data);
         $data['user_id'] = Auth::user()->id;
         $data['status'] = 1;
         print_r($data);
@@ -91,7 +92,7 @@ class RecipesController extends Controller
     
         ]);
         $name = $request->file('file')->getClientOriginalName();
-        $path = $request->file('file')->store('public/files');
+        $path = $request->file('file')->store('public/storage/recipes/');
         $save = new RecipesImage;
         $save->name = $name;
         $save->path = $path;
@@ -154,7 +155,37 @@ class RecipesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $model = new Recipes;
+        $recipe = Recipes::find($id);
+        $recipeCategories = Category::where([
+            ['status', '=', 1],
+        ])->get();
+        $post_tags = TagableTag::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $recipe_image = RecipesImage::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $ingredients = Ingredients::where([
+            ['recipes_id', '=', $id]
+        ])->get();
+        $cooking_steps = CookingStep::where([
+            ['recipes_id', '=', $id]
+        ])->get();
+        $idx = 1;
+        //dd($ingredients);
+        return view('recipes.edit', compact('recipe'))->with([
+            'recipeCategories' => $recipeCategories,
+            'budgetLists' => $this->budgetList($model),
+            'levelLists'=>$this->levelList($model),
+            'halalLists'=>$this->halalList($model),
+            'vegetarianLists'=>$this->vegetarianList($model),
+            'post_tags' => $post_tags,
+            'recipe_image' => $recipe_image,
+            'ingredients' => $ingredients,
+            'cooking_steps' => $cooking_steps,
+            'idx' => $idx,
+        ]);
     }
 
     /**
@@ -166,7 +197,56 @@ class RecipesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+
+        //dd($data);
+        // print_r($data[35]['ingredient_name']);
+        //print_r($data[]);
+        // dd();
+        
+        //update resep
+        $recipe = Recipes::find($id);
+        $recipe->update($data);
+
+        //update tags
+        $post_tags = TagableTag::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $post_tags->update($data);
+
+        // //update image
+        // $recipe_image = RecipesImage::where([
+        //     ['recipes_id', '=', $id]
+        // ])->first();
+        // $recipe_image->update($data);
+
+        //update bahan masak
+        $ingredients = Ingredients::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $bahan = $data['moreFieldsIngredient'];
+        //dd($bahan);
+
+        foreach($bahan as $key => $item){
+            $ingredients = Ingredients::find($key);  
+            
+            $ingredients->ingredient_name = $item['ingredient_name'];
+            $ingredients->save();
+        }
+        // $ingredients->ingredient_name = $data['moreFieldsIngredient'];
+             
+
+        //update cara masak
+        //masalah di cara masak juga berlaku sama dengan masalah di bahan masak
+        $cooking_steps = CookingStep::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $cooking_steps->update($data);
+        //print_r($data);
+
+        
+        
+        return redirect()->route('recipes.index');
     }
 
     /**
@@ -177,7 +257,9 @@ class RecipesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $recipe = Recipes::find($id);
+        $recipe->forceDelete();
+        return back();
     }
 
     private function budgetList($model)

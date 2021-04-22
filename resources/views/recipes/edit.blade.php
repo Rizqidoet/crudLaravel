@@ -8,7 +8,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <form action="{{ route('recipes.store') }}" id="form-create-recipe" name="form-create-recipe" method="POST" enctype="multipart/form-data" >
+                <form action="{{ route('recipes.update', [$recipe->id]) }}" id="form-edit-recipe" name="form-edit-recipe" method="POST" enctype="multipart/form-data" >
+                    @method('PUT')  
                     @csrf
                     <div class="shadow sm:rounded-md sm:overflow-hidden">
                         <div class="px-4 py-5 md:px-16 bg-white space-y-6 sm:p-6">
@@ -27,28 +28,28 @@
                                     Gambar Resep
                                 </h2>
                                 <div class="h-40">
-                                    <img src="" alt="">
+                                    <img src="https://crudLaravel.wtf/{{$recipe_image->path}}" alt="">
                                 </div>
-                                <form method="" nctype="multipart/form-data"  id="" action="" >
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <input type="file" name="file" placeholder="Choose file" id="file">
-                                                    @error('file')
-                                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                                    @enderror
-                                            </div>
+                                
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="file" name="file" placeholder="Choose file" id="file" value="{{$recipe_image->name}}">
+                                                @error('file')
+                                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                                @enderror
                                         </div>
-                                    </div>     
-                                </form>
+                                    </div>
+                                </div>     
+                                
                             </div>
                             <!--End: Upload Gambar-->
 
                             <!--Start: Nama Resep-->
                             <div class="col-span-6 sm:col-span-3">
                                 <h2 for="title" class="block text-sm font-medium text-gray-700">Nama Resepmu<h2>
-                                <input type="text" name="title" id="title" placeholder="Nasi goreng gila" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <input type="text" value="{{ old('name', isset($recipe) ? $recipe->title : '') }}"name="title" id="title" placeholder="Nasi goreng gila" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
                             <!--End: Nama Resep-->
 
@@ -56,11 +57,18 @@
                             <div class="col-span-6 sm:col-span-3">
                                 <h2 for="budget" class="block text-sm font-medium text-gray-700">Biaya Resep (Dalam Rupiah)</h2>
                                 <select id="budget" name="budget" autocomplete="budget" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option>-- Pilih --</option>
+                                    
                                     @foreach ($budgetLists as $budgetList)
-                                        <option value="{{ $budgetList['id'] }}">
-                                            {{ $budgetList['name'] }}
-                                        </option>
+
+                                        @if ($budgetList['id']===$recipe->budget){
+                                            <option selected value="{{ $budgetList['id'] }}">
+                                                {{ $budgetList['name'] }}
+                                            </option>
+                                        }@else{
+                                            <option value="{{ $budgetList['id'] }}">
+                                                {{ $budgetList['name'] }}
+                                            </option>
+                                        }@endif
                                     @endforeach
                                     
                                 </select>
@@ -72,10 +80,17 @@
                                 <h2 for="category_id" class="block text-sm font-medium text-gray-700">Kategori Resep</h2>
                                 <select id="category_id" name="category_id" autocomplete="category_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <option>-- Pilih --</option>
+
                                     @foreach ($recipeCategories as $recipeCategory)
-                                        <option value="{{ $recipeCategory['id'] }}">
+                                        @if($recipeCategory['id'] === $recipe->category_id){
+                                            <option selected value="{{ $recipeCategory['id'] }}">
+                                                {{ $recipeCategory['name'] }}
+                                            </option>
+                                        }@else{
+                                            <option value="{{ $recipeCategory['id'] }}">
                                             {{ $recipeCategory['name'] }}
                                         </option>
+                                        }@endif
                                     @endforeach
                                 </select>
                             </div>
@@ -87,8 +102,8 @@
                                     Ceritakan tentang resepmu
                                 </h2>
                                 <div class="mt-1">
-                                    <textarea id="stories" name="stories" rows="5" value="" placeholder="Resepku ini tercipta dari enyak ku ketika sedang menjadi juru masak di australia"
-                                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                    <textarea id="stories" name="stories" rows="5" placeholder="Resepku ini tercipta dari enyak ku ketika sedang menjadi juru masak di australia"
+                                            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md">{{ old('stories', isset($recipe) ? $recipe->stories : '') }}</textarea>
                                 </div>
                             </div>
                             <!--End: biaya Resep-->
@@ -97,12 +112,12 @@
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <h2 for="serving" class="block text-sm font-medium text-gray-700">Porsi sajian (Orang)</h2>
-                                    <input type="number" name="serving" id="serving" placeholder="4" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input type="number" value="{{ old('serving', isset($recipe) ? $recipe->serving : '') }}" name="serving" id="serving" placeholder="4" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <h2 for="calories" class="block text-sm font-medium text-gray-700">Kalori / Energi (Gram)</h2>
-                                    <input type="number" name="calories" id="calories" placeholder="100" autocomplete="family-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input type="number" value="{{ old('calories', isset($recipe) ? $recipe->calories : '') }}" name="calories" id="calories" placeholder="100" autocomplete="family-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                             </div>  
                             <!--End: Porsi & kalori Resep-->
@@ -111,12 +126,12 @@
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <h2 for="preptime" class="block text-sm font-medium text-gray-700">Lama persiapan (Menit)</h2>
-                                    <input type="number" name="preptime" id="preptime" placeholder="15" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input type="number" value="{{ old('preptime', isset($recipe) ? $recipe->preptime : '') }}" name="preptime" id="preptime" placeholder="15" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <h2 for="cooktime" class="block text-sm font-medium text-gray-700">Lama memasak (Menit)</h2>
-                                    <input type="number" name="cooktime" id="cooktime" placeholder="30" autocomplete="family-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input type="number" value="{{ old('cooktime', isset($recipe) ? $recipe->cooktime : '') }}" name="cooktime" id="cooktime" placeholder="30" autocomplete="family-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
                             </div>
                             <!--End: Porsi & kalori Resep-->
@@ -128,9 +143,15 @@
                                     <select id="level" name="level" autocomplete="level" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <option>-- Pilih --</option>
                                         @foreach ($levelLists as $levelList)
-                                            <option value="{{ $levelList['id'] }}">
-                                                {{ $levelList['name'] }}
-                                            </option>
+                                            @if($levelList['id'] === $recipe->level){
+                                                <option selected value="{{ $levelList['id'] }}">
+                                                    {{ $levelList['name'] }}
+                                                </option>
+                                            }@else{
+                                                <option value="{{ $levelList['id'] }}">
+                                                    {{ $levelList['name'] }}
+                                                </option>
+                                            }@endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -140,9 +161,16 @@
                                     <select id="ishalal" name="ishalal" autocomplete="ishalal" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <option>-- Pilih --</option>
                                         @foreach ($halalLists as $halalList)
-                                            <option value="{{ $halalList['id'] }}">
-                                                {{ $halalList['name'] }}
-                                            </option>
+                                            @if($halalList['id'] === $recipe->ishalal){
+                                                <option selected value="{{ $halalList['id'] }}">
+                                                    {{ $halalList['name'] }}
+                                                </option>
+                                            }@else{
+                                                <option value="{{ $halalList['id'] }}">
+                                                    {{ $halalList['name'] }}
+                                                </option>
+                                            }@endif
+                                            
                                         @endforeach
                                     </select>
                                 </div>
@@ -152,9 +180,15 @@
                                     <select id="isvegan" name="isvegan" autocomplete="isvegan" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <option>-- Pilih --</option>
                                         @foreach ($vegetarianLists as $vegetarianList)
-                                            <option value="{{ $vegetarianList['id'] }}">
-                                                {{ $vegetarianList['name'] }}
-                                            </option>
+                                            @if($vegetarianList['id'] === $recipe->isvegan){
+                                                <option selected value="{{ $vegetarianList['id'] }}">
+                                                    {{ $vegetarianList['name'] }}
+                                                </option>
+                                            }@else{
+                                                <option value="{{ $vegetarianList['id'] }}">
+                                                    {{ $vegetarianList['name'] }}
+                                                </option>
+                                            }@endif
                                         @endforeach
                                     </select>
                                 </div> 
@@ -165,7 +199,7 @@
                             <div class="col-span-6 sm:col-span-3">
                                 <label class="label-tag">Tags : <span class="text-red-600">*</span></label>
                                 <br>
-                                <input type="text" data-role="tagsinput" name="tag_name" class="form-control tags w-full">
+                                <input type="text" value="{{ old('tag_name', isset($post_tags) ? $post_tags->tag_name : '') }}" data-role="tagsinput" name="tag_name" class="form-control tags w-full">
                                 <br>
                                 @if ($errors->has('tag_name'))
                                     <span class="text-danger">{{ $errors->first('tag_name') }}</span>
@@ -188,25 +222,38 @@
 
                                                     </th>
                                                 </tr>
+                                                
                                                 <tr>
-                                                    <!-- <td>
-                                                        <div class="mt-1 flex rounded-md shadow-sm py-1">
-                                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                                                                Input
-                                                            </span>
-                                                            <input type="text" name="moreFieldsIngredient[0][ingredient_name]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" 
-
-                                                            />
-                                                        </div>
-                                                    </td> -->
                                                     <td>
                                                         <button type="button" name="addIngredient" id="addBtnIngredient" 
                                                             class="inline-flex justify-center mt-1 md:py-2 md:px-2 px-2 border border-transparent shadow-sm md:text-xs font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500"
                                                         >
-                                                            Tambah Bahan
+                                                            Tambah bahan
                                                         </button>
                                                     </td>
                                                 </tr>
+
+                                                @foreach( $ingredients as $ingredient )
+                                                <tr>
+                                                    <td>
+                                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                                                                Input
+                                                            </span>
+                                                            <input type="text" value="{{ $ingredient->ingredient_name }}" name="moreFieldsIngredient[{{$ingredient->id }}][ingredient_name]" id="{{ $ingredient->ingredient_name }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                        
+                                                    <td>
+                                                        <button type="button" 
+                                                            class="remove_tr_ingredient inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500"
+                                                        >
+                                                            x
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
                                             </table>
                                         </div>
                                     </div>
@@ -220,30 +267,43 @@
                                             <table class="md:w-full" id="dynamicAddRemoveStepCooking">
                                                 <tr>
                                                     <th>
-                                                    <h2 class="font_semibold text-sm"> Cara Masak - Resep</h2>
+                                                        <h2 class="font_semibold text-sm"> Cara Masak - Resep</h2>
                                                     </th>
                                                     <th>
 
                                                     </th>
                                                 </tr>
+
                                                 <tr>
-                                                    <!-- <td>
-                                                        <div class="mt-1 flex rounded-md shadow-sm py-1">
-                                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                                                                Input
-                                                            </span>
-                                                            <input type="text" name="moreFieldsStepCooking[0][stepcooking_name]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                                            />
-                                                        </div>
-                                                    </td> -->
                                                     <td>
                                                         <button type="button" name="addStepCooking" id="addBtnStepCooking" 
                                                             class="inline-flex justify-center mt-1 md:py-2 md:px-2 px-2 border border-transparent shadow-sm md:text-xs font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500"
                                                         >
-                                                            Tambah Cara Masak
+                                                            Tambah cara masak
                                                         </button>
                                                     </td>
                                                 </tr>
+
+                                                @foreach( $cooking_steps as $cooking_step )
+                                                <tr>
+                                                    <td>
+                                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                                                                Input
+                                                            </span>
+                                                            <input type="text" value="{{ $cooking_step->stepcooking_name }}" name="{{ $cooking_step->id }}[0][stepcooking_name]" id="{{ $cooking_step->id }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" 
+                                                            class="remove_tr_stepcooking inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500"
+                                                        >
+                                                            x
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
                                             </table>
                                         </div>
                                     </div>
@@ -305,7 +365,7 @@
         var i = 0;
         $("#addBtnIngredient").click(function(){
             ++i;
-            $("#dynamicAddRemoveIngredient").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsIngredient['+i+'][ingredient_name]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div></td><td><button type="button" class="remove_tr_ingredient inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500">x</button></td></tr>')
+            $("#dynamicAddRemoveIngredient").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsIngredient['+i+'][ingredient_name]" id="{{ $ingredient->id }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div</td><td><button type="button" class="remove_tr_ingredient inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500">x</button></td></tr>')
         });
         $(document).on('click','.remove_tr_ingredient', function(){
             $(this).parents('tr').remove();
@@ -314,78 +374,13 @@
         var j = 0;
         $("#addBtnStepCooking").click(function(){
             ++j;
-            $("#dynamicAddRemoveStepCooking").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsStepCooking['+j+'][stepcooking_name]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div></td><td><button type="button" class="remove_tr_stepcooking inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500">x</button></td></tr>')
+            $("#dynamicAddRemoveStepCooking").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="{{ $cooking_step->id }}['+j+'][stepcooking_name]" id="{{ $cooking_step->id }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div</td><td><button type="button" class="remove_tr_stepcooking inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500">x</button></td></tr>')
         });
         $(document).on('click','.remove_tr_stepcooking', function(){
             $(this).parents('tr').remove();
         });
 
-    //     $(document).ready(function(){      
-    //         //var url = "{{ url('add-remove-input-fields') }}";
-    //         var i=1;  
-    //         $('#add_ingredient').click(function(){  
-    //             var ingredient_name = $("#ingredient_name").val();
-    //                 i++;  
-    //                 $('#dynamic_field_ingredient').append('<tr id="row'+i+'" class="dynamic-added"><td><div class="mt-1 flex rounded-md shadow-sm py-1"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="ingredient_name[]" placeholder="Masukan nama bahannya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" value="" /></td><td><button type="button" name="remove_ingredient_name" id="'+i+'" class="inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 btn_remove_ingredient_name">x</button></div></td></tr>');  
-    //         });
-    //         $('#add_step_cooking').click(function(){  
-    //             var step_cooking = $("#step_cooking").val();
-    //                 i++;  
-    //                 $('#dynamic_field_step_cooking').append('<tr id="row'+i+'" class="dynamic-added"><td><div class="mt-1 flex rounded-md shadow-sm py-1"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="step_cooking[]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" value="" /></td><td><button type="button" name="remove_step_cooking" id="'+i+'" class="inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 btn_remove_step_cooking">x</button></div></td></tr>');  
-    //         });  
-    //         $(document).on('click', '.btn_remove_ingredient_name', function(){  
-    //             var button_id_ingredient_name = $(this).attr("id");   
-    //             $('#row'+button_id_ingredient_name+'').remove();  
-    //         });
-    //         $(document).on('click', '.btn_remove_step_cooking', function(){  
-    //             var button_id_step_cooking = $(this).attr("id");   
-    //             $('#row'+button_id_step_cooking+'').remove();  
-    //         });  
-    //         $.ajaxSetup({
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             }
-    //         });
-    //     // $('#submit').click(function(){            
-    //     //     $.ajax({  
-    //     //         //url:"{{ url('add-remove-input-fields') }}",  
-    //     //         method:"POST",  
-    //     //         data:$('#add_ingredient_name','#add_step_cooking').serialize(),
-    //     //         type:'json',
-    //     //         success:function(data)  
-    //     //         {
-    //     //             if(data.error){
-    //     //                 display_error_messages(data.error);
-    //     //             }else{
-    //     //                 i=1;
-    //     //                 $('.dynamic-added').remove();
-    //     //                 $('#add_ingredient_name')[0].reset();
-    //     //                 $('#add_name_step_cooking')[0].reset();
-    //     //                 $(".show-success-message-ingredient").find("ul").html('');
-    //     //                 $(".show-success-message-step-cooking").find("ul").html('');
-    //     //                 $(".show-success-message-ingredient").css('display','block');
-    //     //                 $(".show-success-message-step-cooking").css('display','block');
-    //     //                 $(".show-error-message-ingredient").css('display','none');
-    //     //                 $(".show-error-message-step-cooking").css('display','none');
-    //     //                 $(".show-success-message-ingredient").find("ul").append('<li>Bahan Has Been Successfully Inserted.</li>');
-    //     //                 $(".show-success-message-step-cooking").find("ul").append('<li>Bahan Has Been Successfully Inserted.</li>');
-    //     //             }
-    //     //         }  
-    //     //     });  
-    //     // });  
-    //     function display_error_messages(msg) {
-    //         $(".show-error-message-ingredient").find("ul").html('');
-    //         $(".show-error-message-step-cooking").find("ul").html('');
-    //         $(".show-error-message-ingredient").css('display','block');
-    //         $(".show-error-message-step-cooking").css('display','block');
-    //         $(".show-success-message-ingredient").css('display','none');
-    //         $(".show-success-message-step-cooking").css('display','none');
-    //         $.each( msg, function( key, value ) {
-    //             $(".show-error-message-ingredient").find("ul").append('<li>'+value+'</li>');
-    //             $(".show-error-message-step-cooking").find("ul").append('<li>'+value+'</li>');
-    //         });
-    //     }
-    // });  
+    
     </script>
 
 
