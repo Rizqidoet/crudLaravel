@@ -197,53 +197,64 @@ class RecipesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //narik data dari view tampung di variable data
         $data = $request->all();
-
-        //dd($data);
-        // print_r($data[35]['ingredient_name']);
-        //print_r($data[]);
-        // dd();
-        
+    
         //update resep
         $recipe = Recipes::find($id);
         $recipe->update($data);
+        //selesai resep
 
         //update tags
         $post_tags = TagableTag::where([
             ['recipes_id', '=', $id]
         ])->first();
         $post_tags->update($data);
+        //selesai tags
 
-        // //update image
-        // $recipe_image = RecipesImage::where([
-        //     ['recipes_id', '=', $id]
-        // ])->first();
-        // $recipe_image->update($data);
-
-        //update bahan masak
+        //proses update bahan dan cara masak
+        $request->validate([
+            'moreFieldsIngredientUpdate.*.ingredient_name' => 'required',
+            'moreFieldsStepCookingpdate.*.stepcooking_name' => 'required'
+        ]);
+        //Query bahan masak
         $ingredients = Ingredients::where([
             ['recipes_id', '=', $id]
         ])->first();
         $bahan = $data['moreFieldsIngredient'];
-        //dd($bahan);
+            //ubah data
+            foreach($bahan as $key => $itemingredient){
+                $ingredients = Ingredients::find($key);  
+                $ingredients->ingredient_name = $itemingredient['ingredient_name'];
+                $ingredients->save();
+            }
+            //nambah data
+            foreach($request->moreFieldsIngredientUpdate as $keyIngredient => $valueIngredient){
+                $valueIngredient['recipes_id'] = $recipe->id;
+                Ingredients::create($valueIngredient);
+            }
 
-        foreach($bahan as $key => $item){
-            $ingredients = Ingredients::find($key);  
-            
-            $ingredients->ingredient_name = $item['ingredient_name'];
-            $ingredients->save();
-        }
-        // $ingredients->ingredient_name = $data['moreFieldsIngredient'];
-             
-
-        //update cara masak
-        //masalah di cara masak juga berlaku sama dengan masalah di bahan masak
+        //Query cara masak
         $cooking_steps = CookingStep::where([
             ['recipes_id', '=', $id]
         ])->first();
-        $cooking_steps->update($data);
-        //print_r($data);
+        $step = $data['moreFieldsStepCooking'];
+            //ubah data
+            foreach($step as $key => $itemstepcooking){
+                $cooking_steps = CookingStep::find($key);
 
+                $cooking_steps->stepcooking_name = $itemstepcooking['stepcooking_name'];
+                $cooking_steps->save();
+            }
+            //nambah data
+            foreach($request->moreFieldsStepCookingpdate as $keyStepCooking => $valueStepCooking){
+                $valueStepCooking['recipes_id'] = $recipe->id;
+                $valueStepCooking['order'] = 0;
+                CookingStep::create($valueStepCooking);
+            }
+        //selesai bahan dan cara masak
+
+        
         
         
         return redirect()->route('recipes.index');
