@@ -24,25 +24,30 @@
                             <hr>
                             <!--Start: Upload Gambar-->
                             <div>
-                                <h2 class="block text-sm font-medium text-gray-700">
-                                    Gambar Resep
-                                </h2>
-                                <div class="h-40">
-                                    <img src="https://crudLaravel.wtf/{{$recipe_image->path}}" alt="">
-                                </div>
-                                
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input type="file" name="file" placeholder="Choose file" id="file" value="{{$recipe_image->name}}">
-                                                @error('file')
-                                                <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                                @enderror
+                                <form action="" method="" enctype="">
+                                    @csrf
+                                    
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <strong>Name:</strong>
+                                                <input type="text" name="name" value="{{ old('name', isset($recipe_image) ? $recipe_image->name : '') }}" class="form-control" placeholder="Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <form action="" id="formImage" runat="server">
+                                                    <strong>Image:</strong>
+                                                    <div class="w-72 h-64 rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 p-2">
+                                                        <img src="{{ url('storage/ImagesRecipes/'.$recipe_image->path) }}" id="preview-img" name="path" alt="your recipe imege" class="w-full h-full object-center object-contain">
+                                                    </div>
+                                                    <input type="file" name="path" id="pick-img" placeholder="path">
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>     
-                                
+                                    
+                                </form>
                             </div>
                             <!--End: Upload Gambar-->
 
@@ -380,7 +385,19 @@
             $(this).parents('tr').remove();
         });
 
-    
+        function readURL(input){
+            if(input.files && input.files[0]){
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    $('#preview-img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#pick-img").change(function(){
+            readURL(this);
+        });
+
     </script>
 
 

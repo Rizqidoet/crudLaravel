@@ -23,24 +23,29 @@
                             <hr>
                             <!--Start: Upload Gambar-->
                             <div>
-                                <h2 class="block text-sm font-medium text-gray-700">
-                                    Gambar Resep
-                                </h2>
-                                <div class="h-40">
-                                    <img src="" alt="">
-                                </div>
-                                <form method="" nctype="multipart/form-data"  id="" action="" >
+                                <form action="" method="POST" enctype="multipart/form-data">
                                     @csrf
+                                    
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
-                                                <input type="file" name="file" placeholder="Choose file" id="file">
-                                                    @error('file')
-                                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                                    @enderror
+                                                <strong>Name:</strong>
+                                                <input type="text" name="name" class="form-control" placeholder="Name">
                                             </div>
                                         </div>
-                                    </div>     
+                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                            <div class="form-group">
+                                                <form action="" id="formImage" runat="server">
+                                                    <strong>Image:</strong>
+                                                    <div class="w-72 h-64 rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 p-2">
+                                                        <img src="storage/app/public/bucketuang.jpg" id="preview-img" alt="your recipe imege" class="w-full h-full object-center object-contain">
+                                                    </div>
+                                                    <input type="file" name="path" id="pick-img" placeholder="path">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </form>
                             </div>
                             <!--End: Upload Gambar-->
@@ -307,6 +312,7 @@
             ++i;
             $("#dynamicAddRemoveIngredient").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsIngredient['+i+'][ingredient_name]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div></td><td><button type="button" class="remove_tr_ingredient inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500">x</button></td></tr>')
         });
+
         $(document).on('click','.remove_tr_ingredient', function(){
             $(this).parents('tr').remove();
         });
@@ -320,72 +326,21 @@
             $(this).parents('tr').remove();
         });
 
-    //     $(document).ready(function(){      
-    //         //var url = "{{ url('add-remove-input-fields') }}";
-    //         var i=1;  
-    //         $('#add_ingredient').click(function(){  
-    //             var ingredient_name = $("#ingredient_name").val();
-    //                 i++;  
-    //                 $('#dynamic_field_ingredient').append('<tr id="row'+i+'" class="dynamic-added"><td><div class="mt-1 flex rounded-md shadow-sm py-1"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="ingredient_name[]" placeholder="Masukan nama bahannya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" value="" /></td><td><button type="button" name="remove_ingredient_name" id="'+i+'" class="inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 btn_remove_ingredient_name">x</button></div></td></tr>');  
-    //         });
-    //         $('#add_step_cooking').click(function(){  
-    //             var step_cooking = $("#step_cooking").val();
-    //                 i++;  
-    //                 $('#dynamic_field_step_cooking').append('<tr id="row'+i+'" class="dynamic-added"><td><div class="mt-1 flex rounded-md shadow-sm py-1"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="step_cooking[]" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" value="" /></td><td><button type="button" name="remove_step_cooking" id="'+i+'" class="inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500 btn_remove_step_cooking">x</button></div></td></tr>');  
-    //         });  
-    //         $(document).on('click', '.btn_remove_ingredient_name', function(){  
-    //             var button_id_ingredient_name = $(this).attr("id");   
-    //             $('#row'+button_id_ingredient_name+'').remove();  
-    //         });
-    //         $(document).on('click', '.btn_remove_step_cooking', function(){  
-    //             var button_id_step_cooking = $(this).attr("id");   
-    //             $('#row'+button_id_step_cooking+'').remove();  
-    //         });  
-    //         $.ajaxSetup({
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             }
-    //         });
-    //     // $('#submit').click(function(){            
-    //     //     $.ajax({  
-    //     //         //url:"{{ url('add-remove-input-fields') }}",  
-    //     //         method:"POST",  
-    //     //         data:$('#add_ingredient_name','#add_step_cooking').serialize(),
-    //     //         type:'json',
-    //     //         success:function(data)  
-    //     //         {
-    //     //             if(data.error){
-    //     //                 display_error_messages(data.error);
-    //     //             }else{
-    //     //                 i=1;
-    //     //                 $('.dynamic-added').remove();
-    //     //                 $('#add_ingredient_name')[0].reset();
-    //     //                 $('#add_name_step_cooking')[0].reset();
-    //     //                 $(".show-success-message-ingredient").find("ul").html('');
-    //     //                 $(".show-success-message-step-cooking").find("ul").html('');
-    //     //                 $(".show-success-message-ingredient").css('display','block');
-    //     //                 $(".show-success-message-step-cooking").css('display','block');
-    //     //                 $(".show-error-message-ingredient").css('display','none');
-    //     //                 $(".show-error-message-step-cooking").css('display','none');
-    //     //                 $(".show-success-message-ingredient").find("ul").append('<li>Bahan Has Been Successfully Inserted.</li>');
-    //     //                 $(".show-success-message-step-cooking").find("ul").append('<li>Bahan Has Been Successfully Inserted.</li>');
-    //     //             }
-    //     //         }  
-    //     //     });  
-    //     // });  
-    //     function display_error_messages(msg) {
-    //         $(".show-error-message-ingredient").find("ul").html('');
-    //         $(".show-error-message-step-cooking").find("ul").html('');
-    //         $(".show-error-message-ingredient").css('display','block');
-    //         $(".show-error-message-step-cooking").css('display','block');
-    //         $(".show-success-message-ingredient").css('display','none');
-    //         $(".show-success-message-step-cooking").css('display','none');
-    //         $.each( msg, function( key, value ) {
-    //             $(".show-error-message-ingredient").find("ul").append('<li>'+value+'</li>');
-    //             $(".show-error-message-step-cooking").find("ul").append('<li>'+value+'</li>');
-    //         });
-    //     }
-    // });  
+        function readURL(input){
+            if(input.files && input.files[0]){
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    $('#preview-img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#pick-img").change(function(){
+            readURL(this);
+        });
+        
+
+    
     </script>
 
 

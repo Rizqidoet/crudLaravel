@@ -78,37 +78,56 @@ class RecipesController extends Controller
      */
     public function store(Request $request)
     {
-        //save recipe
+        //request value dari view
         $data = $request->all();
-        dd($data);
+        //dd($data);
+
+        //save recipe
         $data['user_id'] = Auth::user()->id;
         $data['status'] = 1;
         print_r($data);
         $recipes = Recipes::create($data);
+        //end save recipe
 
         //save image
-        $validatedData = $request->validate([
-            'file.*' => 'image|max:1024',
-    
-        ]);
-        $name = $request->file('file')->getClientOriginalName();
-        $path = $request->file('file')->store('public/storage/recipes/');
-        $save = new RecipesImage;
-        $save->name = $name;
-        $save->path = $path;
-
-        $recipes->recipes_image()->create([
-            'name' => $name,
-            'path' => $path,
-            'user_id' => auth()->user()->id,
-        ]);
-
-        //save ingredient & stepcooking
         $request->validate([
             'moreFieldsIngredient.*.ingredient_name' => 'required',
-            'moreFieldsStepCooking.*.stepcooking_name' => 'required'
+            'moreFieldsStepCooking.*.stepcooking_name' => 'required',
+            'name' => 'required',
+            'path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024'
         ]);
 
+        if($image = $request->file('path')){
+            $destinationPath = 'storage/ImagesRecipes/';
+            $profileImage = date('YmdHis').'.'.$image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $data['path'] = "$profileImage";
+            $data['name'] = "menu enak";
+            $data['recipes_id'] = $recipes->id;
+            $data['user_id'] = Auth::user()->id;
+        }
+        RecipesImage::create($data);
+        //end save image
+        
+
+        //save image
+        // $validatedData = $request->validate([
+        //     'file.*' => 'image|max:1024',
+    
+        // ]);
+        // $name = $request->file('file')->getClientOriginalName();
+        // $path = $request->file('file')->store('public/storage/recipes/');
+        // $save = new RecipesImage;
+        // $save->name = $name;
+        // $save->path = $path;
+
+        // $recipes->recipes_image()->create([
+        //     'name' => $name,
+        //     'path' => $path,
+        //     'user_id' => auth()->user()->id,
+        // ]);
+
+        //save ingredient & stepcooking
         foreach($request->moreFieldsIngredient as $keyIngredient => $valueIngredient){
             $valueIngredient['recipes_id'] = $recipes->id;
             Ingredients::create($valueIngredient);
@@ -120,6 +139,7 @@ class RecipesController extends Controller
             CookingStep::create($valueStepCooking);
 
         }
+        //end save ingredient & stepcooking
 
         //save tags
         $this->validate($request, [
@@ -131,7 +151,9 @@ class RecipesController extends Controller
         $input_tag['recipes_id'] = $recipes->id;
         $post_tag = TagableTag::create($input_tag);
         $post_tag->tag($tags);
+        //end save tags
 
+        //back ke index menu
         return redirect()->route('recipes.index');
         
         }
@@ -195,28 +217,38 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, RecipesImage $recipe_image)
     {
         //narik data dari view tampung di variable data
         $data = $request->all();
-    
+
         //update resep
         $recipe = Recipes::find($id);
         $recipe->update($data);
         //selesai resep
 
-        //update tags
-        $post_tags = TagableTag::where([
-            ['recipes_id', '=', $id]
-        ])->first();
-        $post_tags->update($data);
-        //selesai tags
-
-        //proses update bahan dan cara masak
+        //update image
         $request->validate([
             'moreFieldsIngredientUpdate.*.ingredient_name' => 'required',
-            'moreFieldsStepCookingpdate.*.stepcooking_name' => 'required'
+            'moreFieldsStepCookingpdate.*.stepcooking_name' => 'required',
+            'name' => 'required',
+            'path' => 'required'
         ]);
+            
+        if($image = $request->file('path')){
+            $destinationPath = 'ImagesRecipes/';
+            $profileImage = date('YmdHis').'.'.$image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $data['path'] = "$profileImage";
+            $data['name'] = "name static";
+        }else{
+            unset($data['path']);
+        }
+        //dd($recipe_image);
+        $recipe_image->update($data);
+        //end update image
+
+        //proses update bahan dan cara masak
         //Query bahan masak
         $ingredients = Ingredients::where([
             ['recipes_id', '=', $id]
@@ -228,11 +260,11 @@ class RecipesController extends Controller
                 $ingredients->ingredient_name = $itemingredient['ingredient_name'];
                 $ingredients->save();
             }
-            //nambah data
-            foreach($request->moreFieldsIngredientUpdate as $keyIngredient => $valueIngredient){
-                $valueIngredient['recipes_id'] = $recipe->id;
-                Ingredients::create($valueIngredient);
-            }
+            // //nambah data
+            // foreach($request->moreFieldsIngredientUpdate as $keyIngredient => $valueIngredient){
+            //     $valueIngredient['recipes_id'] = $recipe->id;
+            //     Ingredients::create($valueIngredient);
+            // }
 
         //Query cara masak
         $cooking_steps = CookingStep::where([
@@ -246,16 +278,20 @@ class RecipesController extends Controller
                 $cooking_steps->stepcooking_name = $itemstepcooking['stepcooking_name'];
                 $cooking_steps->save();
             }
-            //nambah data
-            foreach($request->moreFieldsStepCookingpdate as $keyStepCooking => $valueStepCooking){
-                $valueStepCooking['recipes_id'] = $recipe->id;
-                $valueStepCooking['order'] = 0;
-                CookingStep::create($valueStepCooking);
-            }
+            // //nambah data
+            // foreach($request->moreFieldsStepCookingpdate as $keyStepCooking => $valueStepCooking){
+            //     $valueStepCooking['recipes_id'] = $recipe->id;
+            //     $valueStepCooking['order'] = 0;
+            //     CookingStep::create($valueStepCooking);
+            // }
         //selesai bahan dan cara masak
 
-        
-        
+        //update tags
+        $post_tags = TagableTag::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        $post_tags->update($data);
+        //selesai tags
         
         return redirect()->route('recipes.index');
     }
