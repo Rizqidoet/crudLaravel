@@ -29,12 +29,6 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
-                                                <strong>Name:</strong>
-                                                <input type="text" name="name" class="form-control" placeholder="Name">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-12">
-                                            <div class="form-group">
                                                 <form action="" id="formImage" runat="server">
                                                     <strong>Image:</strong>
                                                     <div class="w-72 h-64 rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 p-2">

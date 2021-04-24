@@ -30,12 +30,6 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                             <div class="form-group">
-                                                <strong>Name:</strong>
-                                                <input type="text" name="name" value="{{ old('name', isset($recipe_image) ? $recipe_image->name : '') }}" class="form-control" placeholder="Name">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-12">
-                                            <div class="form-group">
                                                 <form action="" id="formImage" runat="server">
                                                     <strong>Image:</strong>
                                                     <div class="w-72 h-64 rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 p-2">
@@ -379,7 +373,7 @@
         var j = 0;
         $("#addBtnStepCooking").click(function(){
             ++j;
-            $("#dynamicAddRemoveStepCooking").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsStepCookingpdate['+j+'][stepcooking_name]" id="{{ $cooking_step->id }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div</td><td><button type="button" class="remove_tr_stepcooking inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500">x</button></td></tr>')
+            $("#dynamicAddRemoveStepCooking").append('<tr><td><div class="mt-1 flex rounded-md shadow-sm"><span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">Input</span><input type="text" name="moreFieldsStepCookingUpdate['+j+'][stepcooking_name]" id="{{ $cooking_step->id }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"</div</td><td><button type="button" class="remove_tr_stepcooking inline-flex justify-center mt-1 md:py-1 md:px-2 px-2 border border-transparent shadow-sm md:text-lg font-bold text-xs rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500">x</button></td></tr>')
         });
         $(document).on('click','.remove_tr_stepcooking', function(){
             $(this).parents('tr').remove();

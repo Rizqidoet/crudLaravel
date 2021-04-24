@@ -14,7 +14,6 @@ class CookingStep extends Model
         'recipes_id',
         'order'
     ];
-    
     protected $guarded = [];
     public function recipes()
     {

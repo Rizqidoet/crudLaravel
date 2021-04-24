@@ -16,7 +16,6 @@ class CreateRecipesImagesTable extends Migration
         Schema::create('recipes_images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name');
             $table->string('path');
             $table->unsignedBigInteger('recipes_id');
             $table->unsignedBigInteger('user_id');

@@ -85,7 +85,7 @@ class RecipesController extends Controller
         //save recipe
         $data['user_id'] = Auth::user()->id;
         $data['status'] = 1;
-        print_r($data);
+        //dd($data);
         $recipes = Recipes::create($data);
         //end save recipe
 
@@ -93,40 +93,20 @@ class RecipesController extends Controller
         $request->validate([
             'moreFieldsIngredient.*.ingredient_name' => 'required',
             'moreFieldsStepCooking.*.stepcooking_name' => 'required',
-            'name' => 'required',
             'path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024'
         ]);
 
         if($image = $request->file('path')){
             $destinationPath = 'storage/ImagesRecipes/';
-            $profileImage = date('YmdHis').'.'.$image->getClientOriginalExtension();
+            $profileImage = date('YmdHis').".".$image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
             $data['path'] = "$profileImage";
-            $data['name'] = "menu enak";
             $data['recipes_id'] = $recipes->id;
             $data['user_id'] = Auth::user()->id;
         }
         RecipesImage::create($data);
         //end save image
         
-
-        //save image
-        // $validatedData = $request->validate([
-        //     'file.*' => 'image|max:1024',
-    
-        // ]);
-        // $name = $request->file('file')->getClientOriginalName();
-        // $path = $request->file('file')->store('public/storage/recipes/');
-        // $save = new RecipesImage;
-        // $save->name = $name;
-        // $save->path = $path;
-
-        // $recipes->recipes_image()->create([
-        //     'name' => $name,
-        //     'path' => $path,
-        //     'user_id' => auth()->user()->id,
-        // ]);
-
         //save ingredient & stepcooking
         foreach($request->moreFieldsIngredient as $keyIngredient => $valueIngredient){
             $valueIngredient['recipes_id'] = $recipes->id;
@@ -217,74 +197,43 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id, RecipesImage $recipe_image)
+    public function update(Request $request, $id)
     {
         //narik data dari view tampung di variable data
         $data = $request->all();
+
+//-------------------------------------------------------------------------------------------------------//
 
         //update resep
         $recipe = Recipes::find($id);
         $recipe->update($data);
         //selesai resep
+//------------------------------------------------------------------------------------------------------//
 
         //update image
         $request->validate([
             'moreFieldsIngredientUpdate.*.ingredient_name' => 'required',
             'moreFieldsStepCookingpdate.*.stepcooking_name' => 'required',
-            'name' => 'required',
             'path' => 'required'
         ]);
             
         if($image = $request->file('path')){
-            $destinationPath = 'ImagesRecipes/';
+            $destinationPath = 'storage/ImagesRecipes/';
             $profileImage = date('YmdHis').'.'.$image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
             $data['path'] = "$profileImage";
-            $data['name'] = "name static";
         }else{
             unset($data['path']);
         }
-        //dd($recipe_image);
-        $recipe_image->update($data);
+
+        $recipe_image = RecipesImage::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+            $recipe_image->path = $data['path'];
+            $recipe_image->save();
         //end update image
 
-        //proses update bahan dan cara masak
-        //Query bahan masak
-        $ingredients = Ingredients::where([
-            ['recipes_id', '=', $id]
-        ])->first();
-        $bahan = $data['moreFieldsIngredient'];
-            //ubah data
-            foreach($bahan as $key => $itemingredient){
-                $ingredients = Ingredients::find($key);  
-                $ingredients->ingredient_name = $itemingredient['ingredient_name'];
-                $ingredients->save();
-            }
-            // //nambah data
-            // foreach($request->moreFieldsIngredientUpdate as $keyIngredient => $valueIngredient){
-            //     $valueIngredient['recipes_id'] = $recipe->id;
-            //     Ingredients::create($valueIngredient);
-            // }
-
-        //Query cara masak
-        $cooking_steps = CookingStep::where([
-            ['recipes_id', '=', $id]
-        ])->first();
-        $step = $data['moreFieldsStepCooking'];
-            //ubah data
-            foreach($step as $key => $itemstepcooking){
-                $cooking_steps = CookingStep::find($key);
-
-                $cooking_steps->stepcooking_name = $itemstepcooking['stepcooking_name'];
-                $cooking_steps->save();
-            }
-            // //nambah data
-            // foreach($request->moreFieldsStepCookingpdate as $keyStepCooking => $valueStepCooking){
-            //     $valueStepCooking['recipes_id'] = $recipe->id;
-            //     $valueStepCooking['order'] = 0;
-            //     CookingStep::create($valueStepCooking);
-            // }
-        //selesai bahan dan cara masak
+//------------------------------------------------------------------------------------------------------//
 
         //update tags
         $post_tags = TagableTag::where([
@@ -293,6 +242,149 @@ class RecipesController extends Controller
         $post_tags->update($data);
         //selesai tags
         
+
+//------------------------------------------------------------------------------------------------------//     
+        //Query bahan masak berdasarkan recipes_id
+        $ingredientsAwal = Ingredients::where([
+            ['recipes_id', '=', $id]
+        ])->get();
+        //menghitung jumlah asli record dari db
+        $ingredientsDB = count($ingredientsAwal);
+        //dd($ingredientsDB);
+        
+        //Query bahan masak berdasarkan recipes_id
+        $ingredientsAkhir = Ingredients::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        //menghitung jumlah record setelah diupdate
+        $ingredients = $data['moreFieldsIngredient'];
+        //dd(count($ingredients));
+        //lalu cek apakah ada penambahan data baru atau tidak, karna input untuk penambahan
+        //data baru dengan data yang gua panggil dari DB Berbeda name di input nya 
+        if(isset($data['moreFieldsIngredientUpdate'])){
+            print_r('ada input update');
+            $ingredients2 = $data['moreFieldsIngredientUpdate'];
+            $ingredientsView2 = count($ingredients2);
+        }else{
+            print_r('tidak ada input update');
+            $ingredients2 = 0;
+            $ingredientsView2 = $ingredients2;
+        }
+        //dd($ingredientsView2);
+        $ingredientsView = count($ingredients);
+        $totalIngredientView = $ingredientsView + $ingredientsView2;
+        
+        //dd($ingredients);
+        print_r($ingredientsDB.'-');
+        print_r($totalIngredientView);
+
+        //cek kondisi apakah ini sintax edit add / edit delete / edit doang
+        if($ingredientsDB < $totalIngredientView){
+            print_r("Data Nambah");
+
+            //nambah data
+            foreach($request->moreFieldsIngredientUpdate as $keyIngredient => $valueIngredient){
+                $valueIngredient['recipes_id'] = $recipe->id;
+                Ingredients::create($valueIngredient);
+            }
+            
+            //ubah data
+            foreach($ingredients as $key => $itemingredient){
+                //dd($ingredients);
+                $ingredients = Ingredients::find($key);  
+                $ingredients->ingredient_name = $itemingredient['ingredient_name'];
+                $ingredients->save();
+            }
+
+        }else if($ingredientsDB > $totalIngredientView){
+            print_r("Data Kurang");
+
+            //hapus data
+
+        }else if($ingredientsDB == $totalIngredientView){
+            print_r("Data Di View dan di DB Sama");
+
+            //ubah data
+            foreach($ingredients as $key => $itemingredient){
+                //dd($ingredients);
+                $ingredients = Ingredients::find($key);  
+                $ingredients->ingredient_name = $itemingredient['ingredient_name'];
+                $ingredients->save();
+            }
+        }
+
+// //-----------------------------------------------------------------------------------------------------//
+        
+        //Query bahan masak berdasarkan recipes_id
+        $stepCookingsAwal = CookingStep::where([
+            ['recipes_id', '=', $id]
+        ])->get();
+        //menghitung jumlah asli record dari db
+        $stepCookingsDB = count($stepCookingsAwal);
+        //dd($stepCookingsDB);
+        //Query bahan masak berdasarkan recipes_id
+        $stepCookingsAkhir = CookingStep::where([
+            ['recipes_id', '=', $id]
+        ])->first();
+        //menghitung jumlah record setelah diupdate
+        $stepCookings = $data['moreFieldsStepCooking'];
+        //dd(count($stepCookings));
+        //lalu cek apakah ada penambahan data baru atau tidak, karna input untuk penambahan
+        //data baru dengan data yang gua panggil dari DB Berbeda name di input nya 
+        if(isset($data['moreFieldsStepCookingUpdate'])){
+            //print_r('ada input update');
+            $stepCookings2 = $data['moreFieldsStepCookingUpdate'];
+            $stepCookingsView2 = count($stepCookings2);
+        }else{
+            //print_r('tidak ada input update');
+            $stepCookings2 = 0;
+            $stepCookingsView2 = $stepCookings2;
+        }
+        //dd($stepCookingsView2);
+        $stepCookingsView = count($stepCookings);
+        $totalStepCookingView = $stepCookingsView + $stepCookingsView2;
+        
+        //dd($stepCookings);
+        print_r($stepCookingsDB.'-');
+        print_r($totalStepCookingView);
+
+        //cek kondisi apakah ini sintax edit add / edit delete / edit doang
+        if($stepCookingsDB < $totalStepCookingView){
+            print_r("Data Nambah");
+
+            //nambah data
+            foreach($request->moreFieldsStepCookingUpdate as $keyStepCooking => $valueStepCooking){
+                $valueStepCooking['recipes_id'] = $recipe->id;
+                $valueStepCooking['order'] = 1;
+                CookingStep::create($valueStepCooking);
+            }
+            
+            //ubah data
+            foreach($stepCookings as $key => $itemStepCooking){
+                //dd($stepCookings);
+                $stepCookings = CookingStep::find($key);  
+                $stepCookings->stepcooking_name = $itemStepCooking['stepcooking_name'];
+                $stepCookings->save();
+            }
+
+        }else if($stepCookingsDB > $totalStepCookingView){
+            print_r("Data Kurang");
+
+            //hapus data
+
+        }else if($stepCookingsDB == $totalStepCookingView){
+            print_r("Data Di View dan di DB Sama");
+
+            //ubah data
+            foreach($stepCookings as $key => $itemStepCooking){
+                //dd($stepCookings);
+                $stepCookings = CookingStep::find($key);  
+                $stepCookings->stepcooking_name = $itemStepCooking['stepcooking_name'];
+                $stepCookings->save();
+            }
+        }
+//-----------------------------------------------------------------------------------------------------//
+
         return redirect()->route('recipes.index');
     }
 
