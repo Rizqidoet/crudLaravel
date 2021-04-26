@@ -239,7 +239,7 @@
                                                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                                                                 Input
                                                             </span>
-                                                            <input type="text" value="{{ $ingredient->ingredient_name }}" name="moreFieldsIngredient[{{$ingredient->id }}][ingredient_name]" id="{{ $ingredient->ingredient_name }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                                            <input type="text" value="{{ $ingredient->ingredient_name }}" name="moreFieldsIngredient[{{$ingredient->id }}]" id="{{ $ingredient->ingredient_name }}" placeholder="Jelaskan cara memasaknya" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                                                             />
                                                         </div>
                                                     </td>
@@ -250,6 +250,11 @@
                                                         >
                                                             x
                                                         </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                    <input type="text" class="hidden" name="hiddenInputlah[{{$ingredient->id }}]" id="{{ $ingredient->id }}" value="{{ $ingredient->ingredient_name }}"/>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -368,6 +373,7 @@
         });
         $(document).on('click','.remove_tr_ingredient', function(){
             $(this).parents('tr').remove();
+            
         });
 
         var j = 0;
