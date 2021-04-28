@@ -252,14 +252,36 @@
                             <!--End: Bahan & Cara Memasak-->
 
                             <!-- Start: Button Simpan & Bersihkan -->
-                            <div class="px-4 py-3 text-center sm:px-6">
-                                <button type="submit" class="inline-flex justify-center py-2 md:px-20 px-10 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Simpan
-                                </button>
-
-                                <button type="button" class="md:ml-5 bg-white py-3 mt-2 md:px-20 px-10 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Bersihkan
-                                </button>
+                            <div class="px-10 py-3 text-center sm:px-6 md:w-full">
+                                <div class="md:w-full pb-16 flex row mx-auto justify-center items-center">
+                                    <div class="col text-right">
+                                        <div class="dropdown inline-block relative">
+                                            <button type="button" class="bg-indigo-600 text-white font-semibold py-2 px-20 rounded-md inline-flex items-center">
+                                                <span class="mr-1">Save as</span>
+                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
+                                            </button>
+                                            <ul class="dropdown-menu absolute hidden pt-1 ml-10 text-left">
+                                                <li class="bg-gray-100">
+                                                    <a class="rounded-t hover:bg-indigo-600 hover:text-white text-indigo-600 py-2 px-10 block whitespace-no-wrap no-underline hover:no-underline" href="#">
+                                                        Draft
+                                                    </a>
+                                                </li>
+                                                <li class="bg-gray-100">
+                                                    <a class="rounded-b hover:bg-indigo-600 hover:text-white text-indigo-600 py-2 px-10 block whitespace-no-wrap no-underline hover:no-underline" href="#">
+                                                        Publish
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-left -mt-3.5">
+                                            <a href="{{ route('recipes.index') }}" type="button" class="md:w-64 mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm md:px-10 px-5 py-2.5 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                                Back to menu
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- End: Button Simpan & Bersihkan -->
                         </div>
@@ -287,6 +309,11 @@
             border-radius: .25rem;
             transition: color .15s ease-in-out,background-color .15s ease-in-out,
             border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-left: 70px;
         }
 </style>
 
@@ -331,6 +358,13 @@
         }
         $("#pick-img").change(function(){
             readURL(this);
+        });
+
+        $('form input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
         });
         
 

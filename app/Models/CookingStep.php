@@ -11,8 +11,7 @@ class CookingStep extends Model
 
     protected $fillable = [
         'stepcooking_name',
-        'recipes_id',
-        'order'
+        'recipes_id'
     ];
     protected $guarded = [];
     public function recipes()

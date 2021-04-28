@@ -8,7 +8,19 @@
     <div class="md:py-4 py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-4">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="flex flex-between px-5" justify-between">
+                <div class="flex flex-between px-5">
+                    <div class="py-2 px-4 mt-2 rounded-md absolute text-xs mx-auto justify-center item-center text-green-400 text-white">
+                        
+                        @if ($message = Session::get('success'))
+                            <div class="alert alert-success alert-block">
+                                <strong>{{ $message }}</strong><br>
+                                <span type="button" class="close" data-dismiss="alert">
+                                    <a href="" class="text-red-500 underline">klik here</a>
+                                    to publish your recipe!
+                                </span>	
+                            </div>
+                        @endif
+                    </div>
                     <div class="md:w-2/3 w-full">
                         <h1 class="md:text-2xl  text-lg font-bold mt-12 p-3 my-3">Table Recipes</h1>
                     </div>
@@ -65,57 +77,64 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
                                                
-                                    @if( $recipe->budget == 1 ){
+                                    @if( $recipe->budget == 1 )
                                             
                                                 5.000 - 10.000
                                             
-                                        }@elseif($recipe->budget == 2){
+                                        @elseif($recipe->budget == 2)
                                             
                                                 10.000 - 50.000
                                             
-                                        } @elseif($recipe->budget == 3){
+                                         @elseif($recipe->budget == 3)
                                             
                                                 50.000 - 100.000
                                             
-                                        } @elseif($recipe->budget == 4){
+                                         @elseif($recipe->budget == 4)
                                             
                                                 100.000 - 500.000
                                             
-                                        } @elseif($recipe->budget == 5){
+                                         @elseif($recipe->budget == 5)
                                             
                                                 500.000 - 1.000.000
                                             
-                                        } @else{
+                                         @else
                                             Data Tidak Sesuai
-                                        }
+                                        
                                         @endif
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        @if($recipe->level == 1){
+                                        @if($recipe->level == 1)
                                             Belum Pernah Memasak
-                                        }@elseif($recipe->level == 2){
+                                        @elseif($recipe->level == 2)
                                             Pemula
-                                        }@elseif($recipe->level == 3){
+                                        @elseif($recipe->level == 3)
                                             Mahir Memasak
-                                        }@else{
+                                        @else
                                             Data Tidak Sesuai
-                                        }@endif
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-left">
-                                        @if($recipe->status == 1){
+                                        @if($recipe->status == 0)
                                             Draft
-                                        }@elseif($recipe->status == 2){
+                                        @elseif($recipe->status == 1)
                                             Publish
-                                        }@elseif($recipe->status == 3){
+                                        @elseif($recipe->status == 2)
                                             Live
-                                        }@else{
+                                        @else
                                             Data Tidak Sesuai
-                                        }
+                                        
                                         @endif
                                     </td>
                                     <td class="py-3 px-6 text-center">
                                             <div class="flex item-center justify-center">
+                                                <div class="w-4 mr-4 transform hover:text-purple-500 hover:scale-110">
+                                                    <a href="{{ route('recipes.show', $recipe->id) }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 p-1 mr-4 text-green-600 hover:bg-green-600 hover:text-white rounded" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
                                                 <div class="w-4 mr-4 transform hover:text-purple-500 hover:scale-110">
                                                     <a href="{{ route('recipes.edit', $recipe->id) }}">
                                                         <svg class="w-7 h-7 p-1 mr-4 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -152,4 +171,5 @@
             </div>
         </div>
     </div>
+    
 </x-app-layout>
