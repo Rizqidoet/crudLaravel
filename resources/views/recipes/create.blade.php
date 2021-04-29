@@ -255,12 +255,12 @@
                             <div class="px-10 py-3 text-center sm:px-6 md:w-full">
                                 <div class="md:w-full pb-16 flex row mx-auto justify-center items-center">
                                     <div class="col text-right">
-                                        <div class="dropdown inline-block relative">
-                                            <button type="button" class="bg-indigo-600 text-white font-semibold py-2 px-20 rounded-md inline-flex items-center">
-                                                <span class="mr-1">Save as</span>
-                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
+                                        <div class="dropdownnih inline-block relative">
+                                            <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-20 rounded-md inline-flex items-center">
+                                                <span class="mr-1">Save</span>
+                                                <!-- <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg> -->
                                             </button>
-                                            <ul class="dropdown-menu absolute hidden pt-1 ml-10 text-left">
+                                            <ul class="dropdown-menunih absolute hidden pt-1 ml-10 text-left">
                                                 <li class="bg-gray-100">
                                                     <a class="rounded-t hover:bg-indigo-600 hover:text-white text-indigo-600 py-2 px-10 block whitespace-no-wrap no-underline hover:no-underline" href="#">
                                                         Draft

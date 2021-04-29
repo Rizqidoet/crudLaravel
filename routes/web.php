@@ -28,14 +28,14 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::resource('kategori', KategoriController::class);
     Route::resource('recipes', RecipesController::class);
-    //Route::post('recipes/updatePublish/{id}', 'RecipesController@updatePublish')->name('recipes.updatePublish');
   
-    //Route::get('add-remove-input-fields', 'RecipesController@index');
     //Route::post('add-remove-input-fields', 'RecipesController@store');
 
     Route::get('file-upload', [FileUploadController::class, 'index']);
     Route::post('store', [FileUploadController::class, 'store']);
 });
+//Route::resource('recipes/Draft', 'RecipesController@Draft');
+    
 
 	
 

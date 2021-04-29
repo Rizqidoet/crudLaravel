@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Web\Back\Recipes;
 
-use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Validator;
 
+use App\Events\RecipesCreated;
 use App\Http\Requests\Resep\StoreRecipesRequest;
 use App\Http\Requests\Resep\UpdateRecipesRequest;
+use App\Http\Controllers\Controller;
 
 use App\Models\Category;
 use App\Models\CookingStep;
@@ -21,11 +20,14 @@ use App\Models\RecipesImage;
 use App\Models\tagable_tag;
 use App\Models\TagableTag;
 use App\Models\Taggable_Tag;
+use Illuminate\Support\Facades\Log;
 
 use Symfony\Component\HttpFoundation\Response;
 
 use File;
-
+use Validator;
+use Event;
+use Session;
 use function PHPUnit\Framework\isEmpty;
 
 class RecipesController extends Controller
@@ -37,7 +39,7 @@ class RecipesController extends Controller
      */
     public function index()
     {
-        $recipes = Recipes::orderBy('created_at' , 'Desc')->get();
+        $recipes = Recipes::orderBy('status' , 'asc')->get();
         
         //dd($recipes);
         return view('recipes.index', compact('recipes'));
@@ -86,9 +88,11 @@ class RecipesController extends Controller
         
         //save recipe
         $data['user_id'] = Auth::user()->id;
-        $data['status'] = 1;
+        $data['status'] = 0;
         //dd($data);
         $recipes = Recipes::create($data);
+
+        
         //end save recipe
 
     //------------------------------------------------------------------------------//
@@ -141,9 +145,13 @@ class RecipesController extends Controller
         //end save ingredient & stepcooking
     //------------------------------------------------------------------------------//
         //back ke index menu
-        return redirect()->route('recipes.index')
-        ->with('success','Data has been created as a draft!');
-        
+        //$request->session()->flash('ID', $recipes->id);
+       
+
+        RecipesCreated::dispatch($recipes->id);
+        /*return redirect()->route('recipes.index')
+        ->with('success',$recipes->id);
+        */
         }
 //--------------------------------------------------------------------------------------//
     /**
@@ -157,7 +165,7 @@ class RecipesController extends Controller
         //narik data dari view tampung di variable data
         $data = $request->all();
         //print_r($data);
-
+        
     //--------------------------------------------------------------------------------//
 
         //update resep
@@ -167,7 +175,8 @@ class RecipesController extends Controller
         //selesai resep
     //-------------------------------------------------------------------------------//
     
-    return redirect()->route('recipes.index');
+    return redirect()->route('recipes.index')
+        ->with('Updated','Success - Data Updated to Publish!');
 
     }
 //--------------------------------------------------------------------------------------//
@@ -512,15 +521,8 @@ class RecipesController extends Controller
 
 //---------------------------------------------------------------------------------------//
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updatePublish($id)
-    {
-        print_r("Masuk Function Publish");
+    public function Draft(){
+        print_r("Masuk Function Draft");
         die();
     }
 
