@@ -1,6 +1,8 @@
 <?php
 
+namespace  App\ghostAPI\src\GhostContentAPI;
 namespace App\Http\Controllers\Web\Back\Recipes;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +31,7 @@ use Validator;
 use Event;
 use Session;
 use function PHPUnit\Framework\isEmpty;
-
+use App\ghostAPI\src\GhostContentAPI;
 class RecipesController extends Controller
 {
     /**
@@ -39,7 +41,7 @@ class RecipesController extends Controller
      */
     public function index()
     {
-        $recipes = Recipes::orderBy('status' , 'asc')->get();
+        $recipes = Recipes::orderBy('created_at' , 'desc')->get();
         
         //dd($recipes);
         return view('recipes.index', compact('recipes'));
@@ -149,6 +151,17 @@ class RecipesController extends Controller
        
 
         RecipesCreated::dispatch($recipes->id);
+        $config = [
+            'url'    => config('services.ghost.url'),
+            'key'    => config('services.ghost.content_key'),
+            'version'=> config('services.ghost.version'),
+            ];
+            echo "Prepareing send api <br>";
+            $api = new GhostContentAPI($config);
+            echo "Api Sent <br>";
+            $rs = []; //hold results
+            $rs[] = $api->posts->browse();
+            print_r($rs);
         /*return redirect()->route('recipes.index')
         ->with('success',$recipes->id);
         */

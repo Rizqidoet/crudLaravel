@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "689b5e910c57f5a394b07997e1ef2438",
+    "content-hash": "274f807a6178ef5fd540f647034a10fd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2352,6 +2352,69 @@
                 }
             ],
             "time": "2020-07-20T17:29:33+00:00"
+        },
+        {
+            "name": "planetteamspeak/ts3-php-framework",
+            "version": "1.1.34",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/planetteamspeak/ts3phpframework.git",
+                "reference": "f1cc4decd0528a477951def0d069673061d40640"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/planetteamspeak/ts3phpframework/zipball/f1cc4decd0528a477951def0d069673061d40640",
+                "reference": "f1cc4decd0528a477951def0d069673061d40640",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.1"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+                "friendsofphp/php-cs-fixer": "^2.0.0",
+                "phpcompatibility/php-compatibility": "^8.2",
+                "phpunit/phpunit": "^4.8.35 || ^5.4.3 || ^6.0 || ^7.0",
+                "react/socket": "^0.8.5",
+                "satooshi/php-coveralls": "^1.1 || ^2.0",
+                "squizlabs/php_codesniffer": "^3.3",
+                "symfony/yaml": "~2.1|~3.0|~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "libraries/TeamSpeak3/TeamSpeak3.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sven 'ScP' Paulsen",
+                    "email": "scp@planetteamspeak.com"
+                }
+            ],
+            "description": "Modern use-at-will framework that provides individual components to manage TeamSpeak 3 Server instances",
+            "homepage": "https://www.planetteamspeak.com",
+            "keywords": [
+                "api",
+                "filetransfer",
+                "interface",
+                "management",
+                "query",
+                "server",
+                "teamspeak",
+                "ts3"
+            ],
+            "support": {
+                "docs": "https://docs.planetteamspeak.com/ts3/php/framework",
+                "email": "info@planetteamspeak.com",
+                "issues": "https://github.com/planetteamspeak/ts3phpframework/issues",
+                "source": "https://github.com/planetteamspeak/ts3phpframework/tree/1.1.34"
+            },
+            "time": "2020-03-04T10:03:59+00:00"
         },
         {
             "name": "pragmarx/google2fa",

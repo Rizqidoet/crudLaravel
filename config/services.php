@@ -29,5 +29,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'ghost' => [
+        'content_key' => env('GHOST_CONTENT_KEY'),
+        'admin_key'   => env('GHOST_ADMIN_KEY'),
+        'url'         => env('GHOST_URL'),
+        'version'     => env('GHOST_VERSION'),
+     ],
 
 ];
