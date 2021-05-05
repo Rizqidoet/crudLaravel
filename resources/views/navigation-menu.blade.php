@@ -23,7 +23,12 @@
                 </div> -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('recipes.index') }}" :="request()->routeIs('recipes/index')">
-                        {{ __('Recipes') }}
+                        {{ __('Create Recipes') }}
+                    </x-jet-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-jet-nav-link href="{{ route('recipesFront.index') }}" :="request()->routeIs('recipesFront/index')">
+                        {{ __('Gallery Recipes') }}
                     </x-jet-nav-link>
                 </div>
             </div>

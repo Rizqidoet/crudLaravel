@@ -201,7 +201,6 @@ class RecipesController extends Controller
      */
     public function edit($id)
     {
-        
         $model = new Recipes;
         $recipe = Recipes::find($id);
         
@@ -234,6 +233,7 @@ class RecipesController extends Controller
             'cooking_steps' => $cooking_steps,
             'idx' => $idx,
         ]);
+        
     }
 //--------------------------------------------------------------------------------------//
     /**
