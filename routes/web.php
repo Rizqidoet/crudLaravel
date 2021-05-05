@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('recipesFront', function () {
+    return view('recipes/recipesFront');
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
@@ -28,6 +32,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::resource('kategori', KategoriController::class);
     Route::resource('recipes', RecipesController::class);
+    Route::resource('recipes/recipesFront', RecipesController::class);
   
     //Route::post('add-remove-input-fields', 'RecipesController@store');
 

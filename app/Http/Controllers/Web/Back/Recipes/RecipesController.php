@@ -150,22 +150,22 @@ class RecipesController extends Controller
         //$request->session()->flash('ID', $recipes->id);
        
 
-        RecipesCreated::dispatch($recipes->id);
-        $config = [
-            'url'    => config('services.ghost.url'),
-            'key'    => config('services.ghost.content_key'),
-            'version'=> config('services.ghost.version'),
-            ];
-            echo "Prepareing send api <br>";
-            $api = new GhostContentAPI($config);
-            echo "Api Sent <br>";
-            $rs = []; //hold results
-            $rs[] = $api->posts->browse();
-            print_r($rs);
-        /*return redirect()->route('recipes.index')
+        // RecipesCreated::dispatch($recipes->id);
+        // $config = [
+        //     'url'    => config('services.ghost.url'),
+        //     'key'    => config('services.ghost.content_key'),
+        //     'version'=> config('services.ghost.version'),
+        // ];
+        //     echo "Prepareing send api <br>";
+        //     $api = new GhostContentAPI($config);
+        //     echo "Api Sent <br>";
+        //     $rs = []; //hold results
+        //     $rs[] = $api->posts->browse();
+        //     print_r($rs);
+        return redirect()->route('recipes.index')
         ->with('success',$recipes->id);
-        */
-        }
+        
+    }
 //--------------------------------------------------------------------------------------//
     /**
      * Display the specified resource.
