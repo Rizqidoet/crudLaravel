@@ -12,14 +12,14 @@
             <section class="text-gray-600 body-font">
                 <div class="container mx-auto flex px-5 py-3 items-center justify-center flex-col">
                     <img class="lg:w-2/6 md:w-3/6 w-5/6 object-cover object-center rounded" alt="hero" 
-                            src="{{ url('storage/ImagesRecipes/'.$recipes[0]->path) }}"
+                            src="{{ url('storage/ImagesRecipes/'.$recipes->path) }}"
                     />
                     <div class="text-center lg:w-2/3 w-full">
                         <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
-                            {{ $recipes[0]->title }}
+                            {{ $recipes->title }}
                         </h1>
                         <p class="mb-2 leading-relaxed">
-                            {{ $recipes[0]->stories }}
+                            {{ $recipes->stories }}
                         </p>
                     </div>
                 </div>
@@ -34,10 +34,15 @@
                             <div class="px-4 w-3/12 flex justify-center items-center">    
                                 <img src="https://img.icons8.com/ultraviolet/40/000000/meal.png"/> 
                                 <div class="mt-20 -ml-12">
-                                    <H1 class="text-sm font-semibold text-gray-600">Serving</H1>
+                                    <H1 class="text-sm font-semibold text-gray-600">
+                                        Serving
+                                    </H1>
                                 </div>
-                                <div class="mt-28 -ml-14">
-                                    <span class="text-xs text-gray-600">4 - 5 Person's</span>
+                                <div class="mt-28 -ml-12">
+                                <span class="text-xs text-gray-600">
+                                    {{ $recipes->serving }} Orang
+                                </span>
+                                    
                                 </div>
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
@@ -46,7 +51,9 @@
                                     <H1 class="text-sm font-semibold text-gray-600">Prep time</H1>
                                 </div>
                                 <div class="mt-28 -ml-16">
-                                    <span class="text-xs text-gray-600">10 Minutes</span>
+                                <span class="text-xs text-gray-600">
+                                    {{ $recipes->preptime }} Minutes
+                                </span>
                                 </div>
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
@@ -55,7 +62,9 @@
                                     <H1 class="text-sm font-semibold text-gray-600">Cook time</H1>
                                 </div>
                                 <div class="mt-28 -ml-16">
-                                    <span class="text-xs text-gray-600">30 Minutes</span>
+                                    <span class="text-xs text-gray-600">
+                                        {{ $recipes->cooktime }} Minutes
+                                    </span>
                                 </div>
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
@@ -64,7 +73,9 @@
                                     <H1 class="text-sm font-semibold text-gray-600">Calories</H1>
                                 </div>
                                 <div class="mt-28 -ml-12">
-                                    <span class="text-xs text-gray-600">110 Kkal</span>
+                                    <span class="text-xs text-gray-600">
+                                        {{ $recipes->calories }} Kcal
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +87,23 @@
                                     <H1 class="text-sm font-semibold text-gray-600">Level</H1>
                                 </div>
                                 <div class="mt-28 -ml-12">
-                                    <span class="text-xs text-gray-600">Master Chef</span>
+                                    @if($recipes->level == 1)
+                                        <span class="text-xs text-gray-600">
+                                            Newbie Chef
+                                        </span>
+                                    @elseif($recipes->level == 2)
+                                        <span class="text-xs text-gray-600">
+                                            Junior Chef
+                                        </span>
+                                    @elseif($recipes->level == 3)
+                                        <span class="text-xs text-gray-600">
+                                            Master Chef
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-gray-600">
+                                            Empty value
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
@@ -84,27 +111,93 @@
                                 <div class="mt-20 -ml-10">
                                     <H1 class="text-sm font-semibold text-gray-600">Price</H1>
                                 </div>
-                                <div class="mt-28 -ml-12">
-                                    <span class="text-xs text-gray-600">Idr 120.000</span>
+                                @if($recipes->budget == 1)
+                                    <div class="mt-28 -ml-12">
+                                        <span class="text-xs text-gray-600">
+                                            Idr. 10.000
+                                        </span>
+                                    </div>
+                                @elseif($recipes->budget == 2)
+                                    <div class="mt-28 -ml-12">
+                                        <span class="text-xs text-gray-600">
+                                            Idr. 50.000
+                                        </span>
+                                    </div>
+                                @elseif($recipes->budget == 3)
+                                    <div class="mt-28 -ml-12">
+                                        <span class="text-xs text-gray-600">
+                                            Idr. 100.000
+                                        </span>
+                                    </div>
+                                @elseif($recipes->budget == 4)
+                                    <div class="mt-28 -ml-12">
+                                        <span class="text-xs text-gray-600">
+                                            Idr. 500.000
+                                        </span>
+                                    </div>
+                                @elseif($recipes->budget == 5)
+                                    <div class="mt-28 -ml-14">
+                                    <span class="text-xs text-gray-600">
+                                        Idr. 1.000.000
+                                    </span>    
                                 </div>
+                                @else
+                                    <div class="mt-28 -ml-14">
+                                        <span class="text-xs text-gray-600">
+                                            Empty value
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
                                 <img src="https://img.icons8.com/ultraviolet/40/000000/steak-rare.png"/>
                                 <div class="mt-20 -ml-12">
                                     <H1 class="text-sm font-semibold text-gray-600">Halal ?</H1>
                                 </div>
-                                <div class="mt-28 -ml-9">
-                                    <span class="text-xs text-gray-600">Yes</span>
-                                </div>
+                                @if($recipes->ishalal == 1)
+                                    <div class="mt-28 -ml-8">
+                                        <span class="text-xs text-gray-600">
+                                            Yes
+                                        </span>
+                                    </div>
+                                @elseif($recipes->ishalal == 2)
+                                    <div class="mt-28 -ml-8">
+                                        <span class="text-xs text-gray-600">
+                                            No
+                                        </span>
+                                    </div>
+                                @else
+                                    <div class="mt-28 -ml-14">
+                                        <span class="text-xs text-gray-600">
+                                            Empty value
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="px-4 w-3/12 flex justify-center items-center">
                                 <img src="https://img.icons8.com/ultraviolet/40/000000/organic-food.png"/>
                                 <div class="mt-20 -ml-11">
                                     <H1 class="text-sm font-semibold text-gray-600">Vegan ?</H1>
                                 </div>
-                                <div class="mt-28 -ml-9">
-                                    <span class="text-xs text-gray-600">No</span>
-                                </div>
+                                @if($recipes->isvegan == 1)
+                                    <div class="mt-28 -ml-10">
+                                        <span class="text-xs text-gray-600">
+                                            Yes
+                                        </span>
+                                    </div>
+                                @elseif($recipes->isvegan == 2)
+                                    <div class="mt-28 -ml-8">
+                                        <span class="text-xs text-gray-600">
+                                            No
+                                        </span>
+                                    </div>
+                                @else
+                                    <div class="mt-28 -ml-14">
+                                        <span class="text-xs text-gray-600">
+                                            Empty value
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -244,7 +337,7 @@
                         <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
                             Topics related with the recipe
                         </h1>
-                        <input type="text" value="{{ old('tag_name', isset($recipes) ? $recipes[0]->tag_name : '') }}" data-role="tagsinput" name="tag_name" class="tags w-full" disabled/>
+                        <input type="text" value="{{ old('tag_name', isset($recipes) ? $recipes->tag_name : '') }}" data-role="tagsinput" name="tag_name" class="tags w-full" disabled/>
                                 
                     </div>
                 </div>

@@ -22,7 +22,7 @@
                             
                                 <div class="p-4 md:w-1/3">
                                     <div class="flex rounded-lg h-full bg-gray-100 flex-col px-2">
-                                        <div class="rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 h-48">
+                                        <div class="rounded-lg linline-flex items-center justify-center bg-gray-100 text-gray-400 mb-2 h-48 pt-4">
                                             <img src="{{ url('storage/ImagesRecipes/'.$recipe->path) }}" id="preview-img" name="path" alt="your recipe imege" class="w-full h-full object-center object-contain" >
                                         </div>
                                         <hr class="px-4">

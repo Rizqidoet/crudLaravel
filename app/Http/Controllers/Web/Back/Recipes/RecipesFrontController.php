@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Recipes;
 use App\Models\RecipesImage;
+use App\Models\Category;
 
 class RecipesFrontController extends Controller
 {
@@ -70,19 +71,22 @@ class RecipesFrontController extends Controller
     {
         $recipes = DB::table('recipes')
             ->join('recipes_images', 'recipes.id', '=', 'recipes_images.recipes_id')
-            ->join('ingredients', 'recipes.id', '=', 'ingredients.recipes_id')
-            ->join('cooking_steps', 'recipes.id', '=', 'cooking_steps.recipes_id')
             ->join('tagable_tags', 'recipes.id', '=', 'tagable_tags.recipes_id')
-            ->select('recipes.*', 'recipes_images.path','ingredients.ingredient_name','cooking_steps.stepcooking_name','tagable_tags.tag_name')
+            ->select('recipes.*', 'recipes_images.path','tagable_tags.tag_name')
             ->where('recipes.id', '=', $id)
             ->orderBy('recipes.created_at','desc')
             ->first();
+        $recipeCategories = Category::where([
+            ['status', '=', 1],
+        ])->get();
             // foreach($recipes as $key => $valueRecipes){
             //     //dd($valueRecipes);
             // }
-            dd($recipes->title);
+            //dd($recipes[$key]->title);
 
-            return view('recipes.recipesFrontDetail', compact('recipes'));
+            return view('recipes.recipesFrontDetail', compact('recipes'))->with([
+                'recipeCategories' => $recipeCategories
+            ]);
     }
 
     /**
