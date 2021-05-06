@@ -198,7 +198,7 @@
                             <div class="col-span-6 sm:col-span-3">
                                 <label class="label-tag">Tags : <span class="text-red-600">*</span></label>
                                 <br>
-                                <input type="text" value="{{ old('tag_name', isset($post_tags) ? $post_tags->tag_name : '') }}" data-role="tagsinput" name="tag_name" class="form-control tags w-full">
+                                <input type="text" value="{{ old('tag_name', isset($post_tags) ? $post_tags->tag_name : '') }}" data-role="tagsinput" name="tag_name" class="form-control tags w-full"/>
                                 <br>
                                 @if ($errors->has('tag_name'))
                                     <span class="text-danger">{{ $errors->first('tag_name') }}</span>

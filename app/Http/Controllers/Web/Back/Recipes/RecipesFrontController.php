@@ -18,19 +18,14 @@ class RecipesFrontController extends Controller
      */
     public function index()
     {
-        $recipesImages = RecipesImage::orderBy('created_at','desc')->get();
-        $recipes = Recipes::where([
-            ['status', '=', 1],
-        ])->get();
-        // dd($recipes);
-        //dd($recipesImages);
-        // foreach($recipesImages as $key => $valueRecipesImage){
-        //     dd($valueRecipesImage);
-        // }
-        //dd($recipesImages);
-        return view('recipes.recipesFront', compact('recipesImages'))->with([
-            'recipes' => $recipes
-        ]);
+        $recipes = DB::table('recipes')
+            ->join('recipes_images', 'recipes.id', '=', 'recipes_images.recipes_id')
+            ->select('recipes.id', 'recipes.title', 'recipes_images.path')
+            ->orderBy('recipes.created_at','desc')
+            ->get();
+
+            // dd($recipes);
+        return view('recipes.recipesFront', compact('recipes'));
     }
 
     /**
@@ -73,7 +68,21 @@ class RecipesFrontController extends Controller
      */
     public function edit($id)
     {
-        
+        $recipes = DB::table('recipes')
+            ->join('recipes_images', 'recipes.id', '=', 'recipes_images.recipes_id')
+            ->join('ingredients', 'recipes.id', '=', 'ingredients.recipes_id')
+            ->join('cooking_steps', 'recipes.id', '=', 'cooking_steps.recipes_id')
+            ->join('tagable_tags', 'recipes.id', '=', 'tagable_tags.recipes_id')
+            ->select('recipes.*', 'recipes_images.path','ingredients.ingredient_name','cooking_steps.stepcooking_name','tagable_tags.tag_name')
+            ->where('recipes.id', '=', $id)
+            ->orderBy('recipes.created_at','desc')
+            ->first();
+            // foreach($recipes as $key => $valueRecipes){
+            //     //dd($valueRecipes);
+            // }
+            dd($recipes->title);
+
+            return view('recipes.recipesFrontDetail', compact('recipes'));
     }
 
     /**
