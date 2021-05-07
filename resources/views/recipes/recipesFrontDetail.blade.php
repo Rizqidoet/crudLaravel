@@ -209,49 +209,32 @@
             <section class="text-gray-600 body-font overflow-hidden">
                 <div class="container px-5 py-12 mx-auto">
                     <div class="lg:w-4/5 mx-auto flex flex-wrap">
-                        <img class="lg:w-1/2 lg:h-96 w-full object-cover object-center rounded" src="{{ url('storage/StaticImage/ingredients.jpg') }}"
+                        <img class="lg:w-1/2 w-full object-cover object-center rounded"style="height: 500px" src="{{ url('storage/StaticImage/ingredients.jpg') }}"
                         />
                         <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                             <h1 class="text-gray-900 text-4xl title-font font-medium mb-1 text-center ">
                                 Ingredients
                                 </h1>
                             <hr>
-                            <nav class="flex flex-col px-4 sm:items-start sm:text-left text-center items-center -mb-1 space-y-2.5">
-                                <a>
-                                    <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
-                                        <path d="M20 6L9 17l-5-5"></path>
-                                    </svg>
-                                    </span>First Link
-                                </a>
-                                <a>
-                                    <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
-                                        <path d="M20 6L9 17l-5-5"></path>
-                                    </svg>
-                                    </span>Second Link
-                                </a>
-                                <a>
-                                    <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
-                                        <path d="M20 6L9 17l-5-5"></path>
-                                    </svg>
-                                    </span>Third Link
-                                </a>
-                                <a>
-                                    <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
-                                        <path d="M20 6L9 17l-5-5"></path>
-                                    </svg>
-                                    </span>Fourth Link
-                                </a>
-                                <a>
-                                    <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
-                                        <path d="M20 6L9 17l-5-5"></path>
-                                    </svg>
-                                    </span>Fifth Link
-                                </a>
+                            <nav class="flex flex-col px-4 sm:items-start sm:text-left text-left items-center -mb-1 space-y-2.5">
+                                @foreach( $ingredients as $ingredient )
+                                <div class="row">
+                                    <div class="w-2/12">
+                                        <span class="bg-blue-100 text-blue-500 w-4 h-4 mr-2 rounded-full inline-flex items-center justify-center">
+                                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="w-3 h-3" viewBox="0 0 24 24">
+                                                <path d="M20 6L9 17l-5-5"></path>
+                                            </svg>  
+                                        </span>
+                                    </div>
+                                    <div class="w-10/12">
+                                        <a>
+                                            {{ $ingredient->ingredient_name }}  
+                                        </a>
+                                    </div>
+                                </div> 
+                                
+                                            
+                                @endforeach
                             </nav>
                         </div>
                     </div>
@@ -260,58 +243,32 @@
             <!-- End: Ingredients -->
 
             <!-- Start: StepCooking -->
-            <section class="text-gray-600 body-font px-20">
-                <div class="container px-5 py-5 mx-auto flex flex-wrap">
-                    <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
-                        Step's Cooking
-                    </h1>
+            <section class="text-gray-600 body-font px-32">
+                <div class="container px-5 mx-auto flex flex-wrap">
                     <div class="flex flex-wrap w-full">
-                        <div class="lg:w-3/5 md:w-1/2 md:pr-10 md:py-6">
-                            <div class="flex relative">
-                                <div class="h-full w-10 absolute inset-0 flex items-center justify-center">
-                                    <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
+                        <div class="lg:w-3/6 md:w-1/2 px-4">
+                            <h1 class="title-font sm:text-4xl text-3xl mb-8 font-medium text-gray-900">
+                                Step's Cooking
+                            </h1>
+                            @foreach ( $cooking_steps as $cooking_step )
+                                <div class="flex relative">
+                                    <div class="h-full w-10 absolute inset-0 flex items-center justify-center">
+                                        <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
+                                    </div>
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 inline-flex items-center justify-center text-white relative z-10">
+                                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                                        <path d="M22 4L12 14.01l-3-3"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-grow pl-4 h-28">
+                                        <h2 class="font-medium title-font text-sm text-gray-900 mb-1 mt-2 tracking-wider">STEP</h2>
+                                        <p class="leading-relaxed text-sm">
+                                            {{ $cooking_step->stepcooking_name }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 inline-flex items-center justify-center text-white relative z-10">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                                    <path d="M22 4L12 14.01l-3-3"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-grow pl-4">
-                                    <h2 class="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">STEP 1</h2>
-                                    <p class="leading-relaxed">VHS cornhole pop-up, try-hard 8-bit iceland helvetica. Kinfolk bespoke try-hard cliche palo santo offal.</p>
-                                </div>
-                            </div>
-                            <div class="flex relative">
-                                <div class="h-full w-10 absolute inset-0 flex items-center justify-center">
-                                    <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
-                                </div>
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 inline-flex items-center justify-center text-white relative z-10">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                                    <path d="M22 4L12 14.01l-3-3"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-grow pl-4">
-                                    <h2 class="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">STEP 1</h2>
-                                    <p class="leading-relaxed">VHS cornhole pop-up, try-hard 8-bit iceland helvetica. Kinfolk bespoke try-hard cliche palo santo offal.</p>
-                                </div>
-                            </div>
-                            <div class="flex relative">
-                                <div class="h-full w-10 absolute inset-0 flex items-center justify-center">
-                                    <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
-                                </div>
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 inline-flex items-center justify-center text-white relative z-10">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
-                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                                    <path d="M22 4L12 14.01l-3-3"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-grow pl-4">
-                                    <h2 class="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">STEP 1</h2>
-                                    <p class="leading-relaxed">VHS cornhole pop-up, try-hard 8-bit iceland helvetica. Kinfolk bespoke try-hard cliche palo santo offal.</p>
-                                </div>
-                            </div>
+                            @endforeach
                             <div class="flex relative">
                                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 inline-flex items-center justify-center text-white relative z-10">
                                     <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
@@ -324,7 +281,10 @@
                                 </div>
                             </div>
                         </div>
-                    <img class="lg:w-2/5 md:w-1/2 object-cover object-center rounded-lg md:mt-0 mt-12" src="{{ url('storage/StaticImage/stepcooking.jpg') }}" alt="step">
+
+                        <div class="lg:w-3/6 md:w-1/2 px-4 rounded-lg md:mt-0 mt-12" style="height: 500px">
+                            <img class="object-containt object-center h-full w-full rounded" src="{{ url('storage/StaticImage/stepcooking.jpg') }}" alt="step">
+                        </div>
                     </div>
                 </div>
             </section> 
@@ -332,7 +292,7 @@
 
             <!-- Start: Tags-->
             <section class="text-gray-600 body-font">
-                <div class="container mx-auto flex px-5 py-3 mb-10 items-center justify-center flex-col">
+                <div class="container mx-auto flex px-5 py-3 mt-5 mb-10 items-center justify-center flex-col">
                     <div class="text-center lg:w-2/3 w-full">
                         <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
                             Topics related with the recipe

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Recipes;
 use App\Models\RecipesImage;
 use App\Models\Category;
+use App\Models\Ingredients;
+use App\Models\CookingStep;
 
 class RecipesFrontController extends Controller
 {
@@ -76,16 +78,17 @@ class RecipesFrontController extends Controller
             ->where('recipes.id', '=', $id)
             ->orderBy('recipes.created_at','desc')
             ->first();
-        $recipeCategories = Category::where([
-            ['status', '=', 1],
-        ])->get();
-            // foreach($recipes as $key => $valueRecipes){
-            //     //dd($valueRecipes);
-            // }
-            //dd($recipes[$key]->title);
+
+            $ingredients = Ingredients::where([
+                ['recipes_id', '=', $id]
+            ])->get();
+            $cooking_steps = CookingStep::where([
+                ['recipes_id', '=', $id]
+            ])->get();
 
             return view('recipes.recipesFrontDetail', compact('recipes'))->with([
-                'recipeCategories' => $recipeCategories
+                'ingredients' => $ingredients,
+                'cooking_steps' => $cooking_steps
             ]);
     }
 
