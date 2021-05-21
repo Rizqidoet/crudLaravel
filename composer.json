@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "enqueue/amqp-bunny": "0.8",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.2",
         "fruitcake/laravel-cors": "^2.0",
@@ -15,8 +16,10 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
+        "php-amqplib/php-amqplib": "^3.0",
         "planetteamspeak/ts3-php-framework": "^1.1",
-        "rtconner/laravel-tagging": "^4.1"
+        "rtconner/laravel-tagging": "^4.1",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
