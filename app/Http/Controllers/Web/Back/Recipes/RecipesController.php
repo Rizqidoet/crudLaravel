@@ -175,9 +175,9 @@ class RecipesController extends Controller
             $channel->queue_declare('message', false, false, false, false);
             
             $dataRabbitMQ = [
-                'User ID = '.$data['user_id'] = Auth::user()->id,
-                'Recipes ID = '.$data['recipes_id'],
-                'Time Created = '.$recipes->created_at,
+                'userid = '.$data['user_id'] = Auth::user()->id,
+                'recipesid = '.$data['recipes_id'],
+                'timecreated = '.$recipes->created_at,
             ];
 
             $jsonRabbitMQ = json_encode($dataRabbitMQ);
